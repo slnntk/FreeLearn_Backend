@@ -1,5 +1,6 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +18,10 @@ public class CourseCategory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToMany(mappedBy = "courseCategories")
-    private List<Course> courses;
-
-
     private String name;
     private String description;
+
+    @ManyToMany
+    private List<Course> courses;
 
 }

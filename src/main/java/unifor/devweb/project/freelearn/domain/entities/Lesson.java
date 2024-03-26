@@ -15,10 +15,10 @@ public class Lesson {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    private CourseModule module;
-
     private String title;
     private String videoUrl;
     private int durationMinutes;
+
+    @ManyToOne
+    private CourseModule module;
 }

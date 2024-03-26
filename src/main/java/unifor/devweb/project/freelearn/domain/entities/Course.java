@@ -1,12 +1,12 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
 
 @Entity
 @Data
@@ -17,34 +17,24 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_course_category",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_category_id")
-    )
-    private List<CourseCategory> courseCategories;
-
-    @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    private List<Student> enrolledStudents;
-
-
-    @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
-
-    @OneToMany(mappedBy = "course")
-    private List<CourseModule> modules;
-
     private String title;
     private String description;
     private String imageUrl;
     private String language;
     private int durationHours;
     private String link;
+
+    @ManyToMany(mappedBy = "courses")
+    @JsonIgnore
+    private List<CourseCategory> courseCategories;
+
+    @ManyToMany(mappedBy = "enrolledCourses")
+    private List<Student> enrolledStudents;
+
+    @ManyToOne
+    private Teacher teacher;
+
+    @OneToMany(mappedBy = "course")
+    @JsonIgnore
+    private List<CourseModule> modules;
 }

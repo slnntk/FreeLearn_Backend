@@ -1,8 +1,6 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,14 +18,15 @@ public class CourseModule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String title;
+    private String description;
+    private int sequenceNumber;
+
     @ManyToOne
+    @JsonIgnore
     private Course course;
 
     @OneToMany(mappedBy = "module")
     private List<Lesson> lessons;
-
-    private String title;
-    private String description;
-    private int sequenceNumber;
 
 }
