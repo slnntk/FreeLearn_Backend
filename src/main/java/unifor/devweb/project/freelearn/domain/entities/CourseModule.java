@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import unifor.devweb.project.freelearn.serialization.CustomCourseModuleSerialization;
 import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(using = CustomCourseModuleSerialization.class)
+@ToString
 public class CourseModule {
 
     @Id
