@@ -5,7 +5,11 @@ spring:
     password: 12345678
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+  sql:
+    init:
+      mode: embedded
+      data-locations: classpath:initialize_database.sql
 
 logging:
   level:

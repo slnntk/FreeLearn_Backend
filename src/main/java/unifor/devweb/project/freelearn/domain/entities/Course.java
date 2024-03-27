@@ -1,10 +1,12 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = CustomCourseSerialization.class)
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +28,6 @@ public class Course {
     private String link;
 
     @ManyToMany(mappedBy = "courses")
-    @JsonIgnore
     private List<CourseCategory> courseCategories;
 
     @ManyToMany(mappedBy = "enrolledCourses")
@@ -35,6 +37,5 @@ public class Course {
     private Teacher teacher;
 
     @OneToMany(mappedBy = "course")
-    @JsonIgnore
     private List<CourseModule> modules;
 }
