@@ -1,11 +1,8 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
 
 import java.util.List;
@@ -15,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(using = CustomCourseSerialization.class)
+@Getter
+@Setter
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

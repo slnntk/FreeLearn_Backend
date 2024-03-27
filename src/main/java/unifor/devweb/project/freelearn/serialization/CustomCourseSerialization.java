@@ -23,7 +23,11 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
         jsonGenerator.writeNumberField("durationHours", course.getDurationHours());
         jsonGenerator.writeStringField("link", course.getLink());
 
-        jsonGenerator.writeNumberField("teacherId", course.getTeacher().getId());
+        if (course.getTeacher() != null) {
+            jsonGenerator.writeNumberField("teacherId", course.getTeacher().getId());
+        } else {
+            jsonGenerator.writeNullField("teacherId");
+        }
 
         jsonGenerator.writeFieldName("moduleIds");
         jsonGenerator.writeStartArray();
@@ -48,5 +52,4 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
 
         jsonGenerator.writeEndObject();
     }
-
 }

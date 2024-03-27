@@ -24,10 +24,8 @@ public class Student {
     private User user;
 
     @OneToMany(mappedBy = "student")
-    @JsonIgnore
     private List<Review> reviews;
 
     @ManyToMany
-    @JsonIgnore
     private List<Course> enrolledCourses;
 }

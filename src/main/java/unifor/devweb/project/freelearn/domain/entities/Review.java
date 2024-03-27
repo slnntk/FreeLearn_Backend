@@ -21,7 +21,6 @@ public class Review {
     private Student student;
 
     @ManyToOne
-    @JsonIgnore
     private Course course;
 
     @ManyToOne
