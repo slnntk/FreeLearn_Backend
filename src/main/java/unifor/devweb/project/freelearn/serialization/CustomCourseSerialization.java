@@ -2,13 +2,15 @@ package unifor.devweb.project.freelearn.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import unifor.devweb.project.freelearn.domain.entities.Course;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.domain.entities.CourseCategory;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
 import unifor.devweb.project.freelearn.domain.entities.Student;
+import unifor.devweb.project.freelearn.domain.entities.Teacher;
 
 import java.io.IOException;
+import java.util.List;
 
 public class CustomCourseSerialization extends JsonSerializer<Course> {
 
@@ -23,33 +25,28 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
         jsonGenerator.writeNumberField("durationHours", course.getDurationHours());
         jsonGenerator.writeStringField("link", course.getLink());
 
-        if (course.getTeacher() != null) {
-            jsonGenerator.writeNumberField("teacherId", course.getTeacher().getId());
+        Teacher teacher = course.getTeacher();
+        if (teacher != null) {
+            jsonGenerator.writeNumberField("teacherId", teacher.getId());
         } else {
             jsonGenerator.writeNullField("teacherId");
         }
 
-        jsonGenerator.writeFieldName("moduleIds");
-        jsonGenerator.writeStartArray();
-        for (CourseModule module : course.getModules()) {
-            jsonGenerator.writeNumber(module.getId());
-        }
-        jsonGenerator.writeEndArray();
-
-        jsonGenerator.writeFieldName("enrolledStudentIds");
-        jsonGenerator.writeStartArray();
-        for (Student student : course.getEnrolledStudents()) {
-            jsonGenerator.writeNumber(student.getId());
-        }
-        jsonGenerator.writeEndArray();
-
-        jsonGenerator.writeFieldName("courseCategoryIds");
-        jsonGenerator.writeStartArray();
-        for (CourseCategory category : course.getCourseCategories()) {
-            jsonGenerator.writeNumber(category.getId());
-        }
-        jsonGenerator.writeEndArray();
+        writeArrayField("moduleIds", course.getModules(), jsonGenerator);
+        writeArrayField("enrolledStudentIds", course.getEnrolledStudents(), jsonGenerator);
+        writeArrayField("courseCategoryIds", course.getCourseCategories(), jsonGenerator);
 
         jsonGenerator.writeEndObject();
+    }
+
+    private <T> void writeArrayField(String fieldName, List<T> entities, JsonGenerator jsonGenerator) throws IOException {
+        jsonGenerator.writeFieldName(fieldName);
+        jsonGenerator.writeStartArray();
+        for (T entity : entities) {
+            if (entity instanceof Long) {
+                jsonGenerator.writeNumber((Long) entity);
+            }
+        }
+        jsonGenerator.writeEndArray();
     }
 }

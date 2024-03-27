@@ -1,4 +1,4 @@
-USE freelearn3;
+USE freelearn4;
 -- Populando a tabela course_category
 
 INSERT INTO course_category (id, description, name)

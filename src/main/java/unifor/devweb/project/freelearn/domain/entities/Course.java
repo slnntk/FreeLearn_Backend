@@ -14,6 +14,7 @@ import java.util.List;
 @JsonSerialize(using = CustomCourseSerialization.class)
 @Getter
 @Setter
+@ToString
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

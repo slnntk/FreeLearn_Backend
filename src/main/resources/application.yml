@@ -1,11 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/freelearn3?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/freelearn4?createDatabaseIfNotExist=true&useSSL=false
     username: root
     password: 12345678
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
+    show-sql: false
   sql:
     init:
       mode: embedded
@@ -15,4 +16,4 @@ logging:
   level:
     org:
       hibernate:
-        sql: debug
+        sql: off
