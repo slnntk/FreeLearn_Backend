@@ -2,19 +2,18 @@ package unifor.devweb.project.freelearn.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Review {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String comment;
@@ -27,4 +26,15 @@ public class Review {
 
     @ManyToOne
     private Teacher teacher;
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", comment='" + comment + '\'' +
+                ", student=" + (student != null ? "Student{id=" + student.getId() + "}" : "null") +
+                ", course=" + (course != null ? "Course{id=" + course.getId() + "}" : "null") +
+                ", teacher=" + (teacher != null ? "Teacher{id=" + teacher.getId() + "}" : "null") +
+                '}';
+    }
 }

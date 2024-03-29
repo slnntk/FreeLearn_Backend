@@ -1,6 +1,5 @@
 package unifor.devweb.project.freelearn.services;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +30,6 @@ public class CourseModuleService {
                 .orElseThrow(() -> new ObjectNotFoundException("Course module not found"));
     }
 
-    @Transactional
     public CourseModule save(Long courseId, CourseModule module) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new ObjectNotFoundException("Course not found"));
@@ -40,7 +38,6 @@ public class CourseModuleService {
         return courseModuleRepository.save(module);
     }
 
-    @Transactional
     public CourseModule replace(Long moduleId, CourseModule updatedModule) {
         CourseModule existingModule = findByIdOrThrowBadRequestException(moduleId);
         existingModule.setTitle(updatedModule.getTitle());

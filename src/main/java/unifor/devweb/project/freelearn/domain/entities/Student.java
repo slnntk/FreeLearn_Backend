@@ -2,10 +2,7 @@ package unifor.devweb.project.freelearn.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,10 +10,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Student {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int hoursWatched;
@@ -29,5 +28,17 @@ public class Student {
     private List<Review> reviews;
 
     @ManyToMany
+    @JoinTable(name = "student_course",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> enrolledCourses;
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", hoursWatched=" + hoursWatched +
+                ", numberOfCoursesSubscribed=" + numberOfCoursesSubscribed +
+                '}';
+    }
 }

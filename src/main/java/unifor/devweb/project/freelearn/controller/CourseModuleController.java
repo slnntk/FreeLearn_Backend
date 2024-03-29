@@ -46,7 +46,7 @@ public class CourseModuleController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseModule> save(@RequestParam("courseId") Long courseId, @RequestBody CourseModule module) {
+    public ResponseEntity<CourseModule> create(@RequestParam("courseId") Long courseId, @RequestBody CourseModule module) {
         CourseModule createdModule = courseModuleService.save(courseId, module);
         return ResponseEntity.ok(createdModule);
     }

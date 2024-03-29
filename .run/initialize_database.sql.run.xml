@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="initialize_database.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+    <script-file value="$PROJECT_DIR$/src/main/resources/initialize_database.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="e03fcc6b-44b2-4869-8555-a7e18ba44105" namespace="schema/&quot;freelearn3&quot;" />
+    <method v="2" />
+  </configuration>
+</component>
