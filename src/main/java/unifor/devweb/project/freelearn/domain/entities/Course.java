@@ -32,8 +32,8 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<CourseCategory> courseCategories;
 
-    @ManyToMany(mappedBy = "enrolledCourses")
-    private List<Student> enrolledStudents;
+    @OneToMany(mappedBy = "course")
+    private List<StudentCourse> enrolledStudents;
 
     @ManyToOne
     private Teacher teacher;

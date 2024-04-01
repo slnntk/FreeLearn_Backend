@@ -1,102 +1,74 @@
--- Usuários
-INSERT INTO user (email, name, password)
-VALUES
-    ('professor1@example.com', 'Professor 1', 'password1'),
-    ('professor2@example.com', 'Professor 2', 'password2'),
-    ('professor3@example.com', 'Professor 3', 'password3'),
-    ('aluno1@example.com', 'Aluno 1', 'password4'),
-    ('aluno2@example.com', 'Aluno 2', 'password5'),
-    ('aluno3@example.com', 'Aluno 3', 'password6');
-
--- Professores
-INSERT INTO teacher (employee_id, hours_taught, overall_rating, user_id)
-VALUES
-    ('EMP001', 500, 4.5, 1),
-    ('EMP002', 300, 4.2, 2),
-    ('EMP003', 700, 4.8, 3);
-
--- Relacionamento entre professores e usuários
-UPDATE teacher SET user_id = 1 WHERE id = 1;
-UPDATE teacher SET user_id = 2 WHERE id = 2;
-UPDATE teacher SET user_id = 3 WHERE id = 3;
-
--- Alunos
-INSERT INTO student (hours_watched, number_of_courses_subscribed, user_id)
-VALUES
-    (50, 2, 4),
-    (30, 1, 5),
-    (20, 3, 6);
-
--- Relacionamento entre alunos e usuários
-UPDATE student SET user_id = 4 WHERE id = 1;
-UPDATE student SET user_id = 5 WHERE id = 2;
-UPDATE student SET user_id = 6 WHERE id = 3;
-
--- Categorias de cursos
-INSERT INTO course_category (description, name)
-VALUES
-    ('Desenvolvimento Web', 'Web Development'),
-    ('Ciência de Dados', 'Data Science'),
-    ('Design Gráfico', 'Graphic Design');
-
--- Cursos
-INSERT INTO course (description, duration_hours, image_url, language, link, title, teacher_id)
-VALUES
-    ('Aprenda HTML, CSS e JavaScript para criar sites incríveis', 30, 'html_css_js.jpg', 'Português', 'link1', 'Desenvolvimento Web do Zero', 1),
-    ('Introdução ao Python para Análise de Dados', 20, 'python_data_analysis.jpg', 'Português', 'link2', 'Python para Ciência de Dados', 2),
-    ('Photoshop: Fundamentos e Técnicas Avançadas', 25, 'photoshop.jpg', 'Português', 'link3', 'Domine o Photoshop', 3);
-
--- Relacionamento entre cursos e categorias
-INSERT INTO course_course_category (course_id, category_id)
-VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3);
-
--- Módulos
-INSERT INTO course_module (description, sequence_number, title, course_id)
-VALUES
-    ('Introdução ao HTML', 1, 'HTML Básico', 1),
-    ('CSS: Estilizando seu site', 2, 'CSS Intermediário', 1),
-    ('JavaScript: Adicionando interatividade', 3, 'JavaScript Avançado', 1),
-    ('Introdução ao Python', 1, 'Python Básico', 2),
-    ('Análise de Dados com Pandas', 2, 'Pandas', 2),
-    ('Visualização de Dados com Matplotlib', 3, 'Matplotlib', 2),
-    ('Introdução ao Photoshop', 1, 'Conhecendo a Interface', 3),
-    ('Ferramentas e Técnicas de Edição', 2, 'Edição de Imagens', 3),
-    ('Efeitos Especiais e Manipulação Avançada', 3, 'Photoshop Avançado', 3);
-
--- Lições
-INSERT INTO lesson (duration_minutes, title, video_url, module_id)
-VALUES
-    (30, 'Tags HTML Básicas', 'video1.mp4', 1),
-    (25, 'Seletores CSS', 'video2.mp4', 2),
-    (40, 'Eventos JavaScript', 'video3.mp4', 3),
-    (20, 'Variáveis em Python', 'video4.mp4', 4),
-    (35, 'Análise de Dados com Pandas', 'video5.mp4', 5),
-    (30, 'Gráficos com Matplotlib', 'video6.mp4', 6),
-    (30, 'Interface do Photoshop', 'video7.mp4', 7),
-    (45, 'Edição de Imagens', 'video8.mp4', 8),
-    (50, 'Efeitos Especiais', 'video9.mp4', 9);
-
--- Insira as avaliações dos cursos pelos alunos
-INSERT INTO review (comment, course_id, student_id, teacher_id)
-VALUES
-    ('Ótimo curso para iniciantes!', 1, 1, 1),
-    ('Conteúdo muito bom, mas poderia ter mais exemplos práticos', 2, 2, 2),
-    ('Excelente professor, explica de forma clara e objetiva', 3, 3, 3);
+ALTER TABLE user AUTO_INCREMENT = 1;
+ALTER TABLE teacher AUTO_INCREMENT = 1;
+ALTER TABLE student AUTO_INCREMENT = 1;
+ALTER TABLE course_category AUTO_INCREMENT = 1;
+ALTER TABLE course AUTO_INCREMENT = 1;
+ALTER TABLE course_course_category AUTO_INCREMENT = 1;
+ALTER TABLE teacher_areas_of_expertise AUTO_INCREMENT = 1;
+ALTER TABLE course_module AUTO_INCREMENT = 1;
+ALTER TABLE lesson AUTO_INCREMENT = 1;
+ALTER TABLE review AUTO_INCREMENT = 1;
 
 
--- Áreas de expertise dos professores
-INSERT INTO teacher_areas_of_expertise (teacher_id, areas_of_expertise)
-VALUES
-    (1, 'HTML, CSS, JavaScript'),
-    (2, 'Python, Data Analysis'),
-    (3, 'Photoshop, Design Gráfico');
 
--- Insira os dados de inscrição dos alunos nos cursos
-INSERT INTO student_course (student_id, course_id)
-VALUES
-    (4, 1),
-    (5, 2),
-    (6, 3);
+INSERT INTO user (email, name, password) VALUES
+                                             ('email1@example.com', 'User1', 'password1'),
+                                             ('email2@example.com', 'User2', 'password2'),
+                                             ('email3@example.com', 'User3', 'password3');
+
+INSERT INTO teacher (hours_taught, overall_rating, user_id, employee_id) VALUES
+                                                                             (50, 4.5, 1, 'EMP001'),
+                                                                             (30, 4.0, 2, 'EMP002'),
+                                                                             (40, 4.2, 3, 'EMP003');
+
+INSERT INTO student (hours_watched, number_of_courses_subscribed, user_id) VALUES
+                                                                               (100, 5, 1),
+                                                                               (80, 4, 2),
+                                                                               (120, 6, 3);
+
+
+INSERT INTO course_category (description, name) VALUES
+                                                    ('Category 1 description', 'Category 1'),
+                                                    ('Category 2 description', 'Category 2'),
+                                                    ('Category 3 description', 'Category 3');
+
+INSERT INTO course (duration_hours, teacher_id, description, image_url, language, link, title) VALUES
+                                                                                                   (10, 1, 'Course 1 description', 'image1.jpg', 'English', 'http://course1.com', 'Course 1'),
+                                                                                                   (15, 2, 'Course 2 description', 'image2.jpg', 'English', 'http://course2.com', 'Course 2'),
+                                                                                                   (20, 3, 'Course 3 description', 'image3.jpg', 'English', 'http://course3.com', 'Course 3');
+
+INSERT INTO course_course_category (course_id, category_id) VALUES
+                                                                (1, 1),
+                                                                (2, 2),
+                                                                (3, 3);
+
+
+INSERT INTO teacher_areas_of_expertise (teacher_id, areas_of_expertise) VALUES
+                                                                            (1, 'Mathematics'),
+                                                                            (2, 'Science'),
+                                                                            (3, 'History');
+
+
+INSERT INTO course_module (sequence_number, course_id, description, title) VALUES
+                                                                               (1, 1, 'Module 1 description', 'Module 1'),
+                                                                               (2, 2, 'Module 2 description', 'Module 2'),
+                                                                               (3, 3, 'Module 3 description', 'Module 3');
+
+
+INSERT INTO lesson (duration_minutes, module_id, title, video_url) VALUES
+                                                                       (30, 1, 'Lesson 1', 'video1.mp4'),
+                                                                       (45, 2, 'Lesson 2', 'video2.mp4'),
+                                                                       (60, 3, 'Lesson 3', 'video3.mp4');
+
+
+INSERT INTO student_course (id, course_id, student_id) VALUES
+                                                       (1, 1, 1),
+                                                       (2, 2, 2),
+                                                       (3, 3, 3);
+
+
+INSERT INTO review (course_id, student_id, teacher_id, comment) VALUES
+                                                                    (1, 1, 1, 'Great course!'),
+                                                                    (2, 2, 2, 'Excellent content'),
+                                                                    (3, 3, 3, 'Very informative');
+

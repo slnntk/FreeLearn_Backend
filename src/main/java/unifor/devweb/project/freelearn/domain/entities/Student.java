@@ -1,6 +1,5 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,11 +26,8 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Review> reviews;
 
-    @ManyToMany
-    @JoinTable(name = "student_course",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> enrolledCourses;
+    @OneToMany(mappedBy = "student")
+    private List<StudentCourse> enrolledCourses;
 
     @Override
     public String toString() {
