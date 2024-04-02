@@ -8,7 +8,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CoursePostRequest extends CourseRequest{
+public class CoursePutRequest extends CourseRequest {
 
     @JsonProperty("courseCategoryIds")
     private List<Long> courseCategoryIds;
@@ -16,13 +16,17 @@ public class CoursePostRequest extends CourseRequest{
     @JsonProperty("enrolledStudentIds")
     private List<Long> enrolledStudentIds;
 
+    @JsonProperty("moduleIds")
+    private List<Long> moduleIds;
+
     @Override
     public String toString() {
         String superString = super.toString();
 
-        return superString + "CoursePostRequest{" +
+        return superString + "CoursePutRequest{" +
                 "courseCategoryIds=" + courseCategoryIds +
                 ", enrolledStudentIds=" + enrolledStudentIds +
+                ", moduleIds=" + moduleIds +
                 '}';
     }
 

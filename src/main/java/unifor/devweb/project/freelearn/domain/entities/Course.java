@@ -32,13 +32,13 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<CourseCategory> courseCategories;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<StudentCourse> enrolledStudents;
-
+    
     @ManyToOne
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseModule> modules;
 
     @Override
@@ -52,9 +52,9 @@ public class Course {
                 ", durationHours=" + durationHours +
                 ", link='" + link + '\'' +
                 ", courseCategories=" + (courseCategories != null ? courseCategories.toString() : "[]") +
-                ", enrolledStudents=" + (enrolledStudents != null ? enrolledStudents.size() : 0) +
+                ", enrolledStudents=" + (enrolledStudents != null ? enrolledStudents.toString() : "[]") +
                 ", teacher=" + (teacher != null ? teacher.toString() : "null") +
-                ", modules=" + (modules != null ? modules.size() : 0) +
+                ", modules=" + (modules != null ? modules.toString() : "[]") +
                 '}';
     }
 }

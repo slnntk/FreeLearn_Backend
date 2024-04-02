@@ -14,7 +14,6 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
 
     @Override
     public void serialize(Course course, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        System.out.println(course);
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", course.getId() != null ? course.getId() : 0);
         jsonGenerator.writeStringField("title", course.getTitle() != null ? course.getTitle() : "");
@@ -39,12 +38,10 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
         jsonGenerator.writeStartArray();
         if (course.getEnrolledStudents() != null) {
             for (StudentCourse studentCourse : course.getEnrolledStudents()) {
-                System.out.println(studentCourse);
                 jsonGenerator.writeNumber(studentCourse.getStudent() != null && studentCourse.getStudent().getId() != null ? studentCourse.getStudent().getId() : 0);
             }
         }
         jsonGenerator.writeEndArray();
-
 
         jsonGenerator.writeFieldName("courseCategoryIds");
         jsonGenerator.writeStartArray();

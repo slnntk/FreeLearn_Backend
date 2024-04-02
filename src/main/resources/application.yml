@@ -5,7 +5,7 @@ spring:
     password: 12345678
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: true
     properties:
       hibernate:
@@ -15,5 +15,13 @@ spring:
 logging:
   level:
     org:
+      springframework:
+        jdbc: debug
       hibernate:
         sql: debug
+        type:
+          descriptor:
+            jdbc: trace
+
+database:
+  init-script-path: initialize_database.sql
