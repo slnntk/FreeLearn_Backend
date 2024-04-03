@@ -61,7 +61,10 @@ public class CourseModuleMapperImpl {
         request.setDescription(courseModule.getDescription());
         request.setSequenceNumber(courseModule.getSequenceNumber());
         request.setCourseId(courseModule.getCourse().getId());
-        request.setLessonsId(courseModule.getLessons().stream().map(lesson -> lesson.getId()).collect(Collectors.toList()));
+        request.setLessonsId(courseModule.getLessons()
+                .stream()
+                .map(Lesson::getId)
+                .toList());
 
         return request;
     }

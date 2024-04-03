@@ -2,8 +2,6 @@ package unifor.devweb.project.freelearn.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "student_course")

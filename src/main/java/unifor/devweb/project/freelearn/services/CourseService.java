@@ -9,8 +9,6 @@ import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.exception.ObjectNotFoundException;
 import unifor.devweb.project.freelearn.repository.CourseRepository;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CourseService {

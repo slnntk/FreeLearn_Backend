@@ -13,7 +13,6 @@ import unifor.devweb.project.freelearn.repository.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -69,11 +68,11 @@ public class CourseMapperImpl {
         courseGetRequest.setLink(course.getLink());
         courseGetRequest.setTeacherId(course.getTeacher().getId());
         courseGetRequest.setCourseCategoryIds(course.getCourseCategories().stream()
-                .map(courseCategory -> courseCategory.getId())
-                .collect(Collectors.toList()));
+                .map(CourseCategory::getId)
+                .toList());
         courseGetRequest.setModuleIds(course.getModules().stream()
-                .map(courseModule -> courseModule.getId())
-                .collect(Collectors.toList()));
+                .map(CourseModule::getId)
+                .toList());
 
         return courseGetRequest;
     }
@@ -100,7 +99,7 @@ public class CourseMapperImpl {
             List<CourseCategory> categories = courseCategoryIds.stream()
                     .map(id -> courseCategoryRepository.findById(id).orElse(null))
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .toList();
             course.setCourseCategories(categories);
         }
     }
@@ -121,7 +120,7 @@ public class CourseMapperImpl {
                         return module;
                     })
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .toList();
             course.setModules(modules);
         }
     }
@@ -142,7 +141,7 @@ public class CourseMapperImpl {
                         return module;
                     })
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .toList();
             course.setModules(modules);
             return modules;
         }
