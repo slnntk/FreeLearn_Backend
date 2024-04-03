@@ -38,7 +38,8 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
         jsonGenerator.writeStartArray();
         if (course.getEnrolledStudents() != null) {
             for (StudentCourse studentCourse : course.getEnrolledStudents()) {
-                jsonGenerator.writeNumber(studentCourse.getStudent() != null && studentCourse.getStudent().getId() != null ? studentCourse.getStudent().getId() : 0);
+                jsonGenerator.writeNumber(
+                        studentCourse.getStudent() != null && studentCourse.getStudent().getId() != null ? studentCourse.getStudent().getId() : 0);
             }
         }
         jsonGenerator.writeEndArray();

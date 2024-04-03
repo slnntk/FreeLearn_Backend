@@ -1,12 +1,16 @@
 package unifor.devweb.project.freelearn.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
+import unifor.devweb.project.freelearn.domain.requests.coursemodule.CourseModulePostRequest;
+import unifor.devweb.project.freelearn.mapper.CourseModuleMapperImpl;
 import unifor.devweb.project.freelearn.services.CourseModuleService;
 
 @RestController
@@ -16,6 +20,7 @@ import unifor.devweb.project.freelearn.services.CourseModuleService;
 public class CourseModuleController {
 
     private final CourseModuleService courseModuleService;
+    private final CourseModuleMapperImpl courseModuleMapper;
 
     @GetMapping
     public ResponseEntity<Page<CourseModule>> list(@RequestParam("courseId") Long courseId, Pageable pageable) {
@@ -46,9 +51,11 @@ public class CourseModuleController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseModule> create(@RequestParam("courseId") Long courseId, @RequestBody CourseModule module) {
-        CourseModule createdModule = courseModuleService.save(courseId, module);
-        return ResponseEntity.ok(createdModule);
+    public ResponseEntity<CourseModule> save(@Valid @RequestParam("courseId") Long courseId, @RequestBody CourseModulePostRequest module) {
+        module.setCourseId(courseId);
+        CourseModule courseModule = courseModuleMapper.toCourseModule(module);
+        CourseModule savedCourseModule = courseModuleService.save(courseId, courseModule);
+        return new ResponseEntity<>(savedCourseModule, HttpStatus.CREATED);
     }
 
 

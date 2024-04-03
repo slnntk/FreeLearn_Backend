@@ -1,16 +1,21 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import unifor.devweb.project.freelearn.serialization.CustomCourseModuleSerialization;
+import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
+
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = CustomCourseModuleSerialization.class)
 public class CourseModule {
 
     @Id
