@@ -5,17 +5,19 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
 @Getter
-@Setter
+@Data
 public class CourseModuleRequest {
 
+    @Setter
     @JsonProperty("title")
     private String title;
 
+    @Setter
     @JsonProperty("description")
     private String description;
 
+    @Setter
     @JsonProperty("sequenceNumber")
     private int sequenceNumber;
 

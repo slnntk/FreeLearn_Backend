@@ -13,14 +13,10 @@ public class StudentCourse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
