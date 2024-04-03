@@ -1,10 +1,11 @@
 package unifor.devweb.project.freelearn.exception.details;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import unifor.devweb.project.freelearn.exception.details.ExceptionDetails;
 
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @SuperBuilder
 public class ValidationExceptionDetails extends ExceptionDetails {

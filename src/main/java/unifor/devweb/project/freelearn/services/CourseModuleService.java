@@ -35,18 +35,23 @@ public class CourseModuleService {
     public CourseModule save(Long courseId, CourseModule module) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new ObjectNotFoundException("Course not found"));
-
         module.setCourse(course);
         return courseModuleRepository.save(module);
     }
 
-    @Transactional
-    public CourseModule replace(Long moduleId, CourseModule updatedModule) {
-        CourseModule existingModule = findByIdOrThrowBadRequestException(moduleId);
+    public void replace(CourseModule updatedModule) {
+        CourseModule existingModule = findByIdOrThrowBadRequestException(updatedModule.getId());
+        replaceData(updatedModule, existingModule);
+        courseModuleRepository.save(existingModule);
+    }
+
+    private void replaceData(CourseModule updatedModule, CourseModule existingModule) {
         existingModule.setTitle(updatedModule.getTitle());
         existingModule.setDescription(updatedModule.getDescription());
-        return courseModuleRepository.save(existingModule);
+        existingModule.setSequenceNumber(updatedModule.getSequenceNumber());
+        existingModule.setLessons(updatedModule.getLessons());
     }
+
 
     public void delete(Long moduleId) {
         CourseModule module = findByIdOrThrowBadRequestException(moduleId);

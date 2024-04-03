@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
 
-import java.util.List;
-
 @Repository
 public interface CourseModuleRepository extends JpaRepository<CourseModule, Long> {
 

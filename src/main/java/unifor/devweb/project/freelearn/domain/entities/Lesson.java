@@ -1,20 +1,21 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import unifor.devweb.project.freelearn.serialization.CustomLessonSerialization;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@JsonSerialize(using = CustomLessonSerialization.class)
 public class Lesson {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -23,4 +24,15 @@ public class Lesson {
 
     @ManyToOne
     private CourseModule module;
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", durationMinutes=" + durationMinutes +
+                '}';
+    }
+
 }

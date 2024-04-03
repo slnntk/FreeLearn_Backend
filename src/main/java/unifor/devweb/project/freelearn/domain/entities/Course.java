@@ -1,10 +1,12 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
 
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
@@ -12,12 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(using = CustomCourseSerialization.class)
-@Getter
-@Setter
-@ToString
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -27,15 +26,35 @@ public class Course {
     private int durationHours;
     private String link;
 
-    @ManyToMany(mappedBy = "courses")
+    @ManyToMany
+    @JoinTable(name = "course_course_category",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<CourseCategory> courseCategories;
 
-    @ManyToMany(mappedBy = "enrolledCourses")
-    private List<Student> enrolledStudents;
-
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<StudentCourse> enrolledStudents;
+    
     @ManyToOne
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseModule> modules;
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", language='" + language + '\'' +
+                ", durationHours=" + durationHours +
+                ", link='" + link + '\'' +
+                ", courseCategories=" + (courseCategories != null ? courseCategories.toString() : "[]") +
+                ", enrolledStudents=" + (enrolledStudents != null ? enrolledStudents.toString() : "[]") +
+                ", teacher=" + (teacher != null ? teacher.toString() : "null") +
+                ", modules=" + (modules != null ? modules.toString() : "[]") +
+                '}';
+    }
 }

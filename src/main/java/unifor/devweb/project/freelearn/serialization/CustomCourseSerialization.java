@@ -6,47 +6,53 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.domain.entities.CourseCategory;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
-import unifor.devweb.project.freelearn.domain.entities.Student;
-import unifor.devweb.project.freelearn.domain.entities.Teacher;
+import unifor.devweb.project.freelearn.domain.entities.StudentCourse;
 
 import java.io.IOException;
-import java.util.List;
 
 public class CustomCourseSerialization extends JsonSerializer<Course> {
 
     @Override
     public void serialize(Course course, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("id", course.getId());
-        jsonGenerator.writeStringField("title", course.getTitle());
-        jsonGenerator.writeStringField("description", course.getDescription());
-        jsonGenerator.writeStringField("imageUrl", course.getImageUrl());
-        jsonGenerator.writeStringField("language", course.getLanguage());
+        jsonGenerator.writeNumberField("id", course.getId() != null ? course.getId() : 0);
+        jsonGenerator.writeStringField("title", course.getTitle() != null ? course.getTitle() : "");
+        jsonGenerator.writeStringField("description", course.getDescription() != null ? course.getDescription() : "");
+        jsonGenerator.writeStringField("imageUrl", course.getImageUrl() != null ? course.getImageUrl() : "");
+        jsonGenerator.writeStringField("language", course.getLanguage() != null ? course.getLanguage() : "");
         jsonGenerator.writeNumberField("durationHours", course.getDurationHours());
-        jsonGenerator.writeStringField("link", course.getLink());
+        jsonGenerator.writeStringField("link", course.getLink() != null ? course.getLink() : "");
 
-        Teacher teacher = course.getTeacher();
-        if (teacher != null) {
-            jsonGenerator.writeNumberField("teacherId", teacher.getId());
-        } else {
-            jsonGenerator.writeNullField("teacherId");
-        }
+        jsonGenerator.writeNumberField("teacherId", course.getTeacher() != null && course.getTeacher().getId() != null ? course.getTeacher().getId() : 0);
 
-        writeArrayField("moduleIds", course.getModules(), jsonGenerator);
-        writeArrayField("enrolledStudentIds", course.getEnrolledStudents(), jsonGenerator);
-        writeArrayField("courseCategoryIds", course.getCourseCategories(), jsonGenerator);
-
-        jsonGenerator.writeEndObject();
-    }
-
-    private <T> void writeArrayField(String fieldName, List<T> entities, JsonGenerator jsonGenerator) throws IOException {
-        jsonGenerator.writeFieldName(fieldName);
+        jsonGenerator.writeFieldName("moduleIds");
         jsonGenerator.writeStartArray();
-        for (T entity : entities) {
-            if (entity instanceof Long) {
-                jsonGenerator.writeNumber((Long) entity);
+        if (course.getModules() != null) {
+            for (CourseModule module : course.getModules()) {
+                jsonGenerator.writeNumber(module.getId() != null ? module.getId() : 0);
             }
         }
         jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeFieldName("enrolledStudentIds");
+        jsonGenerator.writeStartArray();
+        if (course.getEnrolledStudents() != null) {
+            for (StudentCourse studentCourse : course.getEnrolledStudents()) {
+                jsonGenerator.writeNumber(
+                        studentCourse.getStudent() != null && studentCourse.getStudent().getId() != null ? studentCourse.getStudent().getId() : 0);
+            }
+        }
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeFieldName("courseCategoryIds");
+        jsonGenerator.writeStartArray();
+        if (course.getCourseCategories() != null) {
+            for (CourseCategory category : course.getCourseCategories()) {
+                jsonGenerator.writeNumber(category.getId() != null ? category.getId() : 0);
+            }
+        }
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeEndObject();
     }
 }
