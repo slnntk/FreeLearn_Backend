@@ -1,7 +1,7 @@
 package unifor.devweb.project.freelearn.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,40 +15,45 @@ import unifor.devweb.project.freelearn.repository.LessonRepository;
 @RequiredArgsConstructor
 public class LessonService {
 
-    private final LessonRepository lessonRepository;
     private final CourseModuleRepository courseModuleRepository;
+    private final LessonRepository lessonRepository;
 
-
-    public Page<Lesson> listAll(Long moduleId, Pageable pageable) {
-        return lessonRepository.findByModuleId(moduleId, pageable);
+    public Page<Lesson> listAll(Long courseId, Pageable pageable) {
+        return lessonRepository.findByModuleId(courseId, pageable);
     }
 
-    public Iterable<Lesson> listAllNonPageable(Long moduleId) {
-        return lessonRepository.findByModuleId(moduleId);
+    public Iterable<Lesson> listAllNonPageable(Long courseId) {
+        return lessonRepository.findByModuleId(courseId);
     }
 
-    public Lesson save(Long moduleId, Lesson lesson) {
-        CourseModule module = courseModuleRepository.findById(moduleId)
-                .orElseThrow(() -> new ObjectNotFoundException("Course module not found"));
-
-        lesson.setModule(module);
-        return lessonRepository.save(lesson);
-    }
-
-    public Lesson findByIdOrThrowBadRequestException(Long id) {
-        return lessonRepository.findById(id)
+    public Lesson findByIdOrThrowBadRequestException(Long lessonId) {
+        return lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ObjectNotFoundException("Lesson not found"));
     }
 
-    public Lesson replace(Long id, Lesson updatedLesson) {
-        Lesson existingLesson = findByIdOrThrowBadRequestException(id);
-        updatedLesson.setId(existingLesson.getId());
-        updatedLesson.setModule(existingLesson.getModule());
-        return lessonRepository.save(updatedLesson);
+    @Transactional
+    public Lesson save(Long moduleId, Lesson lesson) {
+        CourseModule courseModule = courseModuleRepository.findById(moduleId)
+                .orElseThrow(() -> new ObjectNotFoundException("Course Module not found"));
+        lesson.setModule(courseModule);
+        return lessonRepository.save(lesson);
     }
 
-    public void delete(Long id) {
-        Lesson existingLesson = findByIdOrThrowBadRequestException(id);
-        lessonRepository.delete(existingLesson);
+    public void replace(Lesson updatedLesson) {
+        Lesson existingLesson = findByIdOrThrowBadRequestException(updatedLesson.getId());
+        replaceData(updatedLesson, existingLesson);
+        lessonRepository.save(existingLesson);
+    }
+
+    private void replaceData(Lesson updatedLesson, Lesson existingLesson) {
+        existingLesson.setTitle(updatedLesson.getTitle());
+        existingLesson.setDurationMinutes(updatedLesson.getDurationMinutes());
+        existingLesson.setVideoUrl(updatedLesson.getVideoUrl());
+    }
+
+
+    public void delete(Long lessonId) {
+        Lesson lesson = findByIdOrThrowBadRequestException(lessonId);
+        lessonRepository.delete(lesson);
     }
 }

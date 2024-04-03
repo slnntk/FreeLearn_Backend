@@ -1,12 +1,15 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
+import unifor.devweb.project.freelearn.serialization.CustomLessonSerialization;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = CustomLessonSerialization.class)
 public class Lesson {
 
     @Id
