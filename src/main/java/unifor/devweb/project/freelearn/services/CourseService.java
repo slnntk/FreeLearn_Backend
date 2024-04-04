@@ -18,6 +18,7 @@ public class CourseService {
     public Page<Course> listAll(Pageable pageable) {
         return courseRepository.findAll(pageable);
     }
+
     public Iterable<Course> listAllNonPageable() {
         return courseRepository.findAll();
     }
@@ -30,10 +31,6 @@ public class CourseService {
     @Transactional
     public Course save(Course course) {
         return courseRepository.save(course);
-    }
-
-    public void delete(long id) {
-        courseRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 
     @Transactional
@@ -54,5 +51,9 @@ public class CourseService {
         existingCourse.setCourseCategories(updatedCourse.getCourseCategories());
         existingCourse.setModules(updatedCourse.getModules());
         existingCourse.setEnrolledStudents(updatedCourse.getEnrolledStudents());
+    }
+
+    public void delete(long id) {
+        courseRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 }
