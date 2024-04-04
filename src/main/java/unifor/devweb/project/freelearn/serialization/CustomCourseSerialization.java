@@ -1,19 +1,25 @@
 package unifor.devweb.project.freelearn.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import lombok.RequiredArgsConstructor;
 import unifor.devweb.project.freelearn.domain.entities.Course;
-import unifor.devweb.project.freelearn.domain.entities.CourseCategory;
-import unifor.devweb.project.freelearn.domain.entities.CourseModule;
 import unifor.devweb.project.freelearn.domain.entities.StudentCourse;
+import unifor.devweb.project.freelearn.serialization.services.CustomSerializerService;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class CustomCourseSerialization extends JsonSerializer<Course> {
+
+    private final CustomSerializerService customSerializerService;
 
     @Override
     public void serialize(Course course, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+
+        customSerializerService.setJsonGenerator(jsonGenerator);
+
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", course.getId() != null ? course.getId() : 0);
         jsonGenerator.writeStringField("title", course.getTitle() != null ? course.getTitle() : "");
@@ -23,35 +29,12 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
         jsonGenerator.writeNumberField("durationHours", course.getDurationHours());
         jsonGenerator.writeStringField("link", course.getLink() != null ? course.getLink() : "");
 
-        jsonGenerator.writeNumberField("teacherId", course.getTeacher() != null && course.getTeacher().getId() != null ? course.getTeacher().getId() : 0);
-
-        jsonGenerator.writeFieldName("moduleIds");
-        jsonGenerator.writeStartArray();
-        if (course.getModules() != null) {
-            for (CourseModule module : course.getModules()) {
-                jsonGenerator.writeNumber(module.getId() != null ? module.getId() : 0);
-            }
-        }
-        jsonGenerator.writeEndArray();
-
-        jsonGenerator.writeFieldName("enrolledStudentIds");
-        jsonGenerator.writeStartArray();
-        if (course.getEnrolledStudents() != null) {
-            for (StudentCourse studentCourse : course.getEnrolledStudents()) {
-                jsonGenerator.writeNumber(
-                        studentCourse.getStudent() != null && studentCourse.getStudent().getId() != null ? studentCourse.getStudent().getId() : 0);
-            }
-        }
-        jsonGenerator.writeEndArray();
-
-        jsonGenerator.writeFieldName("courseCategoryIds");
-        jsonGenerator.writeStartArray();
-        if (course.getCourseCategories() != null) {
-            for (CourseCategory category : course.getCourseCategories()) {
-                jsonGenerator.writeNumber(category.getId() != null ? category.getId() : 0);
-            }
-        }
-        jsonGenerator.writeEndArray();
+        customSerializerService.writeListField("moduleIds", course.getModules());
+        customSerializerService.writeListField("enrolledStudentIds", course.getEnrolledStudents()
+                .stream()
+                .map(StudentCourse::getStudent).toList());
+        customSerializerService.writeListField("courseCategoryIds", course.getCourseCategories());
+        customSerializerService.writeField("teacherId", course.getTeacher());
 
         jsonGenerator.writeEndObject();
     }
