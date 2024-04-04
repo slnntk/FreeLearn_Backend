@@ -1,12 +1,15 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
+import unifor.devweb.project.freelearn.serialization.CustomReviewSerialization;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = CustomReviewSerialization.class)
 public class Review {
 
     @Id
