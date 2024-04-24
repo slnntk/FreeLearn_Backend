@@ -56,9 +56,9 @@ VALUES (1, 1, 'Module 1 description', 'Module 1'),
 
 
 INSERT INTO lesson (duration_minutes, module_id, title, video_url)
-VALUES (30, 1, 'Lesson 1', 'video1.mp4'),
-       (45, 2, 'Lesson 2', 'video2.mp4'),
-       (60, 3, 'Lesson 3', 'video3.mp4');
+VALUES (30, 1, 'LessonDTO 1', 'video1.mp4'),
+       (45, 2, 'LessonDTO 2', 'video2.mp4'),
+       (60, 3, 'LessonDTO 3', 'video3.mp4');
 
 
 INSERT INTO student_course (id, course_id, student_id)

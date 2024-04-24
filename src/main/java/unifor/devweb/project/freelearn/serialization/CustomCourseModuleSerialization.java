@@ -3,10 +3,12 @@ package unifor.devweb.project.freelearn.serialization;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import lombok.RequiredArgsConstructor;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class CustomCourseModuleSerialization extends JsonSerializer<CourseModule> {
 
     @Override

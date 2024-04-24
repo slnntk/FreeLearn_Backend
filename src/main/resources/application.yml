@@ -22,6 +22,3 @@ logging:
         type:
           descriptor:
             jdbc: trace
-
-database:
-  init-script-path: initialize_database.sql

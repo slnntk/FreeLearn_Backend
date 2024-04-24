@@ -27,7 +27,7 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson{" +
+        return "LessonDTO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +

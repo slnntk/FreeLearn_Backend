@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
 
 import jakarta.persistence.*;
@@ -26,19 +27,19 @@ public class Course {
     private int durationHours;
     private String link;
 
-    @ManyToMany
-    @JoinTable(name = "course_course_category",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<CourseCategory> courseCategories;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseCourseCategory> courseCategories;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+
+    @Nullable
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentCourse> enrolledStudents;
-    
+
     @ManyToOne
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @Nullable
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseModule> modules;
 
     @Override

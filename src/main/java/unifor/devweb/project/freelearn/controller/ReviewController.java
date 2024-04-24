@@ -8,11 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unifor.devweb.project.freelearn.config.CycleAvoidingMappingContext;
 import unifor.devweb.project.freelearn.domain.entities.Review;
-import unifor.devweb.project.freelearn.domain.requests.review.ReviewGetRequest;
-import unifor.devweb.project.freelearn.domain.requests.review.ReviewPostRequest;
-import unifor.devweb.project.freelearn.domain.requests.review.ReviewPutRequest;
-import unifor.devweb.project.freelearn.mapper.ReviewMapperImpl;
+import unifor.devweb.project.freelearn.dto.ReviewDTO;
+import unifor.devweb.project.freelearn.mapper.ReviewMapper;
 import unifor.devweb.project.freelearn.services.ReviewService;
 
 import java.util.List;
@@ -22,67 +21,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewController {
 
+    private final CycleAvoidingMappingContext context;
     private final ReviewService reviewService;
-    private final ReviewMapperImpl reviewMapper;
+    private final ReviewMapper reviewMapper;
 
     @GetMapping
-    public ResponseEntity<Page<Review>> list(Pageable pageable) {
-        return ResponseEntity.ok(reviewService.listAll(pageable));
-    }
-
-    @GetMapping("/client")
-    public ResponseEntity<Page<ReviewGetRequest>> listToClient(Pageable pageable) {
+    public ResponseEntity<Page<ReviewDTO>> list(Pageable pageable) {
         Page<Review> reviewPage = reviewService.listAll(pageable);
-        Page<ReviewGetRequest> reviewGetRequestPage = reviewPage.map(reviewMapper::fromReviewToGetRequest);
-        return ResponseEntity.ok(reviewGetRequestPage);
+        Page<ReviewDTO> reviewDTOPage = reviewPage.map(reviewMapper::toDTO);
+        return ResponseEntity.ok(reviewDTOPage);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<Iterable <Review>> listAll() {
-        return ResponseEntity.ok(reviewService.listAllNonPageable());
-    }
-
-    @GetMapping(path = "/client/all")
-    public ResponseEntity<Iterable <ReviewGetRequest>> listAllNonPageableToClient() {
+    public ResponseEntity<List<ReviewDTO>> listAll() {
         List<Review> reviewList = (List<Review>) reviewService.listAllNonPageable();
-        List<ReviewGetRequest> reviewGetRequestList = reviewList
-                .stream()
-                .map(reviewMapper::fromReviewToGetRequest)
+        List<ReviewDTO> reviewDTOList = reviewList.stream()
+                .map(reviewMapper::toDTO)
                 .toList();
-        return ResponseEntity.ok(reviewGetRequestList);
+        return ResponseEntity.ok(reviewDTOList);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Review> findById(@PathVariable long id) {
-        return ResponseEntity.ok(reviewService.findByIdOrThrowBadRequestException(id));
-    }
-
-    @GetMapping(path = "/client/{id}")
-    public ResponseEntity<ReviewGetRequest> findByIdToClient(@PathVariable long id) {
+    public ResponseEntity<ReviewDTO> findById(@PathVariable long id) {
         Review review = reviewService.findByIdOrThrowBadRequestException(id);
-        ReviewGetRequest reviewGetRequest = reviewMapper.fromReviewToGetRequest(review);
-        return ResponseEntity.ok(reviewGetRequest);
+        ReviewDTO reviewDTO = reviewMapper.toDTO(review);
+        return ResponseEntity.ok(reviewDTO);
     }
 
     @Transactional
     @PostMapping
-    public ResponseEntity<Review> save(@Valid @RequestBody ReviewPostRequest request) {
-        Review review = reviewMapper.toReview(request);
+    public ResponseEntity<ReviewDTO> save(@Valid @RequestBody ReviewDTO request) {
+        Review review = reviewMapper.toEntity(request, context);
         Review savedReview = reviewService.save(review);
-        return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
+        ReviewDTO savedReviewDTO = reviewMapper.toDTO(savedReview);
+        return new ResponseEntity<>(savedReviewDTO, HttpStatus.CREATED);
     }
 
     @Transactional
     @PutMapping("/{id}")
-    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid ReviewPutRequest request) {
+    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid ReviewDTO request) {
         Review existingReview = reviewService.findByIdOrThrowBadRequestException(id);
-
-        request.setCourseId(existingReview.getCourse().getId());
-        request.setStudentId(existingReview.getStudent().getId());
-        request.setTeacherId(existingReview.getTeacher().getId());
-
-        Review updatedReview = reviewMapper.toReview(existingReview, request);
-
+        Review updatedReview = reviewMapper.toEntity(request, context);
+        updatedReview.setId(existingReview.getId());
         reviewService.replace(updatedReview);
         return ResponseEntity.noContent().build();
     }

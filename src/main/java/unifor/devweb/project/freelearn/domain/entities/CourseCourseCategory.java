@@ -1,33 +1,30 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
-import jakarta.persistence.*;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student_course")
 @Data
-public class StudentCourse {
+@Table(name = "course_course_category")
+public class CourseCourseCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
-
-    @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CourseCategory category;
+
     @Override
     public String toString() {
-        return "StudentCourse{" +
+        return "CourseCourseCategory{" +
                 "id=" + id +
                 ", course=" + (course != null ? course.getId() : "null") +
-                ", student=" + (student != null ? student.getId() : "null") +
+                ", category=" + (category != null ? category.getId() : "null") +
                 '}';
     }
-
 }

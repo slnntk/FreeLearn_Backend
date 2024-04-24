@@ -5,15 +5,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import unifor.devweb.project.freelearn.domain.entities.Course;
+import unifor.devweb.project.freelearn.domain.entities.*;
 import unifor.devweb.project.freelearn.exception.ObjectNotFoundException;
+import unifor.devweb.project.freelearn.repository.CourseCourseCategoryRepository;
 import unifor.devweb.project.freelearn.repository.CourseRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseCourseCategoryRepository courseCourseCategoryRepository;
 
     public Page<Course> listAll(Pageable pageable) {
         return courseRepository.findAll(pageable);
@@ -48,12 +53,22 @@ public class CourseService {
         existingCourse.setDurationHours(updatedCourse.getDurationHours());
         existingCourse.setLink(updatedCourse.getLink());
         existingCourse.setTeacher(updatedCourse.getTeacher());
-        existingCourse.setCourseCategories(updatedCourse.getCourseCategories());
-        existingCourse.setModules(updatedCourse.getModules());
-        existingCourse.setEnrolledStudents(updatedCourse.getEnrolledStudents());
+
+        if (updatedCourse.getCourseCategories() != null) {
+            existingCourse.getCourseCategories().clear();
+            existingCourse.getCourseCategories().addAll(updatedCourse.getCourseCategories());
+        }
+
+
+        if (updatedCourse.getModules() != null) {
+            existingCourse.getModules().clear();
+            existingCourse.getModules().addAll(updatedCourse.getModules());
+        }
+
     }
 
     public void delete(long id) {
         courseRepository.delete(findByIdOrThrowBadRequestException(id));
     }
+
 }

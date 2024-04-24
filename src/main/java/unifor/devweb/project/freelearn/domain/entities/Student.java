@@ -3,6 +3,7 @@ package unifor.devweb.project.freelearn.domain.entities;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
 import unifor.devweb.project.freelearn.serialization.CustomStudentSerialization;
 
@@ -27,9 +28,11 @@ public class Student {
     @OneToOne
     private User user;
 
+    @Nullable
     @OneToMany(mappedBy = "student")
     private List<Review> reviews;
 
+    @Nullable
     @OneToMany(mappedBy = "student")
     private List<StudentCourse> enrolledCourses;
 

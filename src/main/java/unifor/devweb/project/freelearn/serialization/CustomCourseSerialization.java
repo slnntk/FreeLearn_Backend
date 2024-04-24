@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.RequiredArgsConstructor;
 import unifor.devweb.project.freelearn.domain.entities.Course;
+import unifor.devweb.project.freelearn.domain.entities.CourseCourseCategory;
 import unifor.devweb.project.freelearn.domain.entities.StudentCourse;
 import unifor.devweb.project.freelearn.serialization.services.CustomSerializerService;
 
@@ -30,10 +31,12 @@ public class CustomCourseSerialization extends JsonSerializer<Course> {
         jsonGenerator.writeStringField("link", course.getLink() != null ? course.getLink() : "");
 
         customSerializerService.writeListField("moduleIds", course.getModules());
-        customSerializerService.writeListField("enrolledStudentIds", course.getEnrolledStudents()
-                .stream()
-                .map(StudentCourse::getStudent).toList());
-        customSerializerService.writeListField("courseCategoryIds", course.getCourseCategories());
+
+        if (course.getEnrolledStudents() != null) {
+            customSerializerService.writeListField("enrolledStudentIds", course.getEnrolledStudents().stream().map(StudentCourse::getStudent).toList());
+        }
+
+        customSerializerService.writeListField("courseCategoryIds", course.getCourseCategories().stream().map(CourseCourseCategory::getCategory).toList());
         customSerializerService.writeField("teacherId", course.getTeacher());
 
         jsonGenerator.writeEndObject();
