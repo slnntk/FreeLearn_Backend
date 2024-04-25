@@ -11,7 +11,7 @@ import unifor.devweb.project.freelearn.domain.entities.Lesson;
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     @Query("SELECT l FROM Lesson l WHERE l.module.id = :moduleId")
-    Page<Lesson> findByModuleId(Long moduleId, Pageable pageable);
+    Page<Lesson> findByModuleIdPageable(Long moduleId, Pageable pageable);
 
     @Query("SELECT l FROM Lesson l WHERE l.module.id = :moduleId")
     Iterable<Lesson> findByModuleId(Long moduleId);

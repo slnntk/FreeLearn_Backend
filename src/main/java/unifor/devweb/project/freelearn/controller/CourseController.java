@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unifor.devweb.project.freelearn.config.CycleAvoidingMappingContext;
 import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.dto.CourseDTO;
 import unifor.devweb.project.freelearn.mapper.CourseMapper;
@@ -24,8 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseController {
 
-
-    private final CycleAvoidingMappingContext context;
     private final CourseService courseService;
     private final CourseMapper courseMapper;
 
@@ -52,7 +49,7 @@ public class CourseController {
     @Transactional
     @PostMapping
     public ResponseEntity<CourseDTO> save(@Valid @RequestBody CourseDTO request) {
-        CourseDTO savedCourseDTO = courseMapper.toDTO(courseService.save(courseMapper.toEntity(request, context)));
+        CourseDTO savedCourseDTO = courseMapper.toDTO(courseService.save(courseMapper.toEntity(request)));
         return new ResponseEntity<>(savedCourseDTO, HttpStatus.CREATED);
     }
 
@@ -66,10 +63,9 @@ public class CourseController {
         }
 
         request.setId(id);
-        Course course = courseMapper.toEntity(request, context);
+        Course course = courseMapper.toEntity(request);
         courseService.replace(course);
         log.info(course);
-//        courseService.replace(courseMapper.toEntity(request, context));
         return ResponseEntity.noContent().build();
     }
 

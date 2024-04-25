@@ -19,7 +19,7 @@ public class CourseModuleService {
     private final CourseRepository courseRepository;
 
     public Page<CourseModule> listAll(Long courseId, Pageable pageable) {
-        return courseModuleRepository.findAllByCourseId(courseId, pageable);
+        return courseModuleRepository.findAllByCourseIdPageable(courseId, pageable);
     }
 
     public Iterable<CourseModule> listAllNonPageable(Long courseId) {

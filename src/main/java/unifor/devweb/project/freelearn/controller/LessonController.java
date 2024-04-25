@@ -54,11 +54,7 @@ public class LessonController {
     @Transactional
     @PostMapping
     public ResponseEntity<LessonDTO> save(@Valid @RequestParam("courseModuleId") Long courseModuleId, @RequestBody LessonDTO lessonDTO) {
-        if (!lessonDTO.getModuleId().equals(courseModuleId)) {
-            throw new BadRequestException("The courseModuleId must be the same in the request parameter and in the request body!");
-        }
-        lessonDTO.setModuleId(courseModuleId);
-        Lesson lesson = lessonMapper.toEntity(lessonDTO, context);
+        Lesson lesson = lessonMapper.toEntity(lessonDTO);
         Lesson savedLesson = lessonService.save(lesson.getModule().getId(), lesson);
         LessonDTO savedLessonDTO = lessonMapper.toDTO(savedLesson);
         return new ResponseEntity<>(savedLessonDTO, HttpStatus.CREATED);
@@ -71,7 +67,7 @@ public class LessonController {
         if (!existingLesson.getId().equals(lessonDTO.getId())) {
             throw new BadRequestException("The lesson ID in the request body must match the ID in the URL!");
         }
-        Lesson updatedLesson = lessonMapper.toEntity(lessonDTO, context);
+        Lesson updatedLesson = lessonMapper.toEntity(lessonDTO);
         lessonService.replace(updatedLesson);
         return ResponseEntity.noContent().build();
     }

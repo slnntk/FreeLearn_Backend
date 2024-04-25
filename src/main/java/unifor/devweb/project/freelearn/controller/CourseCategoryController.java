@@ -53,7 +53,7 @@ public class CourseCategoryController {
     @Transactional
     @PostMapping
     public ResponseEntity<CourseCategoryDTO> save(@Valid @RequestBody CourseCategoryDTO request) {
-        CourseCategory category = courseCategoryMapper.toEntity(request, context);
+        CourseCategory category = courseCategoryMapper.toEntity(request);
         CourseCategory savedCourseCategory = courseCategoryService.save(category);
         CourseCategoryDTO savedCourseCategoryDTO = courseCategoryMapper.toDTO(savedCourseCategory);
         return new ResponseEntity<>(savedCourseCategoryDTO, HttpStatus.CREATED);
@@ -67,7 +67,7 @@ public class CourseCategoryController {
             return ResponseEntity.notFound().build();
         }
 
-        CourseCategory updatedCategory = courseCategoryMapper.toEntity(request, context);
+        CourseCategory updatedCategory = courseCategoryMapper.toEntity(request);
         updatedCategory.setId(id);
         courseCategoryService.replace(updatedCategory);
         return ResponseEntity.noContent().build();

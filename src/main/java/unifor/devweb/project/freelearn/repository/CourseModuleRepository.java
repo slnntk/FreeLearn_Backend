@@ -14,7 +14,7 @@ public interface CourseModuleRepository extends JpaRepository<CourseModule, Long
     boolean existsByCourse(Course course);
 
     @Query("SELECT cm FROM CourseModule cm WHERE cm.course.id = :courseId")
-    Page<CourseModule> findAllByCourseId(Long courseId, Pageable pageable);
+    Page<CourseModule> findAllByCourseIdPageable(Long courseId, Pageable pageable);
 
     @Query("SELECT cm FROM CourseModule cm WHERE cm.course.id = :courseId")
     Iterable<CourseModule> findAllByCourseId(Long courseId);

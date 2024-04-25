@@ -51,7 +51,7 @@ public class ReviewController {
     @Transactional
     @PostMapping
     public ResponseEntity<ReviewDTO> save(@Valid @RequestBody ReviewDTO request) {
-        Review review = reviewMapper.toEntity(request, context);
+        Review review = reviewMapper.toEntity(request);
         Review savedReview = reviewService.save(review);
         ReviewDTO savedReviewDTO = reviewMapper.toDTO(savedReview);
         return new ResponseEntity<>(savedReviewDTO, HttpStatus.CREATED);
@@ -61,7 +61,7 @@ public class ReviewController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid ReviewDTO request) {
         Review existingReview = reviewService.findByIdOrThrowBadRequestException(id);
-        Review updatedReview = reviewMapper.toEntity(request, context);
+        Review updatedReview = reviewMapper.toEntity(request);
         updatedReview.setId(existingReview.getId());
         reviewService.replace(updatedReview);
         return ResponseEntity.noContent().build();

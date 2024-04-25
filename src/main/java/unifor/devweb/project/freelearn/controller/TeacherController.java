@@ -53,7 +53,7 @@ public class TeacherController {
     @Transactional
     @PostMapping
     public ResponseEntity<TeacherDTO> save(@Valid @RequestBody TeacherDTO request) {
-        Teacher teacher = teacherMapper.toEntity(request, context);
+        Teacher teacher = teacherMapper.toEntity(request);
         Teacher savedTeacher = teacherService.save(teacher);
         TeacherDTO savedTeacherDTO = teacherMapper.toDTO(savedTeacher);
         return new ResponseEntity<>(savedTeacherDTO, HttpStatus.CREATED);
@@ -67,7 +67,7 @@ public class TeacherController {
             return ResponseEntity.notFound().build();
         }
 
-        Teacher updatedTeacher = teacherMapper.toEntity(request, context);
+        Teacher updatedTeacher = teacherMapper.toEntity(request);
         updatedTeacher.setId(id);
         teacherService.replace(updatedTeacher);
         return ResponseEntity.noContent().build();

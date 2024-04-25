@@ -36,9 +36,7 @@ public class ReviewService {
     @Transactional
     public void replace(Review updatedReview) {
         Review existingReview = findByIdOrThrowBadRequestException(updatedReview.getId());
-        System.out.println(existingReview);
         replaceData(updatedReview, existingReview);
-        System.out.println(updatedReview);
         reviewRepository.save(existingReview);
     }
 

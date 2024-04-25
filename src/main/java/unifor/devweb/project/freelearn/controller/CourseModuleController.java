@@ -55,11 +55,7 @@ public class CourseModuleController {
     @Transactional
     @PostMapping
     public ResponseEntity<CourseModuleDTO> save(@Valid @RequestParam("courseId") Long courseId, @RequestBody CourseModuleDTO moduleDTO) {
-        if (!moduleDTO.getCourseId().equals(courseId)) {
-            throw new BadRequestException("The courseId must be the same in the request parameter and in the request body!");
-        }
-        moduleDTO.setCourseId(courseId);
-        CourseModule courseModule = courseModuleMapper.toEntity(moduleDTO, context);
+        CourseModule courseModule = courseModuleMapper.toEntity(moduleDTO);
         CourseModule savedCourseModule = courseModuleService.save(courseModule.getCourse().getId(), courseModule);
         CourseModuleDTO savedCourseModuleDTO = courseModuleMapper.toDTO(savedCourseModule);
         return new ResponseEntity<>(savedCourseModuleDTO, HttpStatus.CREATED);
@@ -72,7 +68,7 @@ public class CourseModuleController {
         if (!existingCourseModule.getId().equals(moduleDTO.getId())) {
             throw new BadRequestException("The module ID in the request body must match the ID in the URL!");
         }
-        CourseModule updatedCourseModule = courseModuleMapper.toEntity(moduleDTO, context);
+        CourseModule updatedCourseModule = courseModuleMapper.toEntity(moduleDTO);
         courseModuleService.replace(updatedCourseModule);
         return ResponseEntity.noContent().build();
     }
