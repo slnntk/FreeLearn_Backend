@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unifor.devweb.project.freelearn.domain.entities.User;
+import unifor.devweb.project.freelearn.domain.entities.user.User;
 import unifor.devweb.project.freelearn.dto.UserDTO;
 import unifor.devweb.project.freelearn.mapper.UserMapper;
 import unifor.devweb.project.freelearn.services.UserService;

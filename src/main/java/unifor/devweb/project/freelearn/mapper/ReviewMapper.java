@@ -13,9 +13,9 @@ import unifor.devweb.project.freelearn.dto.ReviewDTO;
 @Mapper(componentModel = "spring", uses = {StudentMapper.class, CourseMapper.class, TeacherMapper.class})
 public interface ReviewMapper {
 
-    @Mapping(source = "student.id", target = "studentId")
-    @Mapping(source = "course.id", target = "courseId")
-    @Mapping(source = "teacher.id", target = "teacherId")
+    @Mapping(source = "student", target = "student")
+    @Mapping(source = "course", target = "course")
+    @Mapping(source = "teacher", target = "teacher")
     ReviewDTO toDTO(Review review);
 
     @InheritInverseConfiguration

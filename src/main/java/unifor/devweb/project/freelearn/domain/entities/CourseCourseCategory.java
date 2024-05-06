@@ -1,5 +1,6 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import jakarta.persistence.*;
 

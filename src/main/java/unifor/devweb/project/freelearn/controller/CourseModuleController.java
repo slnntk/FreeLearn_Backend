@@ -62,7 +62,7 @@ public class CourseModuleController {
     }
 
     @Transactional
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity<Void> replace(@PathVariable Long id, @RequestBody @Valid CourseModuleDTO moduleDTO) {
         CourseModule existingCourseModule = courseModuleService.findByIdOrThrowBadRequestException(id);
         if (!existingCourseModule.getId().equals(moduleDTO.getId())) {

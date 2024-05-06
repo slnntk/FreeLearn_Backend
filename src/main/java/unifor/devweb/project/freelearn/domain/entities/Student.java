@@ -1,8 +1,11 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.Nullable;
+import unifor.devweb.project.freelearn.domain.entities.user.User;
 
 import java.util.List;
 

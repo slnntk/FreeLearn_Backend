@@ -8,10 +8,10 @@ import unifor.devweb.project.freelearn.domain.entities.Lesson;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
 import unifor.devweb.project.freelearn.dto.LessonDTO;
 
-@Mapper(componentModel = "spring", uses = {CourseModuleMapper.class})
+@Mapper(componentModel = "spring")
 public interface LessonMapper {
 
-    @Mapping(source = "module.id", target = "courseModuleId")
+    @Mapping(source = "module", target = "courseModule")
     LessonDTO toDTO(Lesson lesson);
 
     @InheritInverseConfiguration

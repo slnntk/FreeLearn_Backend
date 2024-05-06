@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {LessonMapper.class})
 public interface CourseModuleMapper {
 
-    @Mapping(source = "course.id", target = "courseId")
+    @Mapping(source = "course", target = "course")
     @Mapping(source = "lessons", target = "lessonDTOS")
     CourseModuleDTO toDTO(CourseModule courseModule);
 

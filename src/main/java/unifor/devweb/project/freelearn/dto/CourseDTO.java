@@ -1,16 +1,16 @@
 package unifor.devweb.project.freelearn.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import unifor.devweb.project.freelearn.domain.entities.CourseCourseCategory;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CourseDTO implements Serializable {
     @NotNull(message = "ID cannot be null")
     private Long id;
@@ -33,18 +33,16 @@ public class CourseDTO implements Serializable {
     @NotBlank(message = "Link cannot be blank")
     private String link;
 
+
     @JsonProperty("categories")
-    private List<CourseCourseCategoryDTO> courseCategoryDTOS = new ArrayList<>();
+    private List<CourseCourseCategoryDTO> courseCategories;
 
     @JsonProperty("students")
-    @JsonManagedReference
-    private List<StudentCourseDTO> studentCourseDTOS = new ArrayList<>();
+    private List<StudentCourseDTO> studentCourseDTOS;
 
     @JsonProperty("teacher")
-    @JsonManagedReference
     private TeacherDTO teacherDTO;
 
     @JsonProperty("modules")
-    @JsonManagedReference
-    private List<CourseModuleDTO> moduleDTOList = new ArrayList<>();
+    private List<CourseModuleDTO> moduleDTOList;
 }

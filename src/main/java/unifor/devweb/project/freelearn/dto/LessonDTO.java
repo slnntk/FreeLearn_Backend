@@ -1,6 +1,6 @@
 package unifor.devweb.project.freelearn.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class LessonDTO implements Serializable {
     @NotNull(message = "ID cannot be null")
     private Long id;
@@ -21,7 +22,7 @@ public class LessonDTO implements Serializable {
     @NotNull(message = "Duration cannot be null")
     private int durationMinutes;
 
-    @JsonProperty("moduleId")
-    @NotNull(message = "Course Module ID cannot be null")
-    private Long courseModuleId;
+    @JsonProperty("module")
+    @JsonIdentityReference(alwaysAsId = true)
+    private CourseModuleDTO courseModule;
 }

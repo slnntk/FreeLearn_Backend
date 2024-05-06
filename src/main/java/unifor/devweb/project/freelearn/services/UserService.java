@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import unifor.devweb.project.freelearn.domain.entities.User;
+import unifor.devweb.project.freelearn.domain.entities.user.User;
 import unifor.devweb.project.freelearn.exception.ObjectNotFoundException;
 import unifor.devweb.project.freelearn.repository.UserRepository;
 

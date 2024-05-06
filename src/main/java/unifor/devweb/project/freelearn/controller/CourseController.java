@@ -8,9 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.dto.CourseDTO;
+import unifor.devweb.project.freelearn.exception.BadRequestException;
 import unifor.devweb.project.freelearn.mapper.CourseMapper;
 import unifor.devweb.project.freelearn.services.CourseService;
 
@@ -40,6 +44,7 @@ public class CourseController {
         return ResponseEntity.ok(courseDTOList);
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping(path = "/{id}")
     public ResponseEntity<CourseDTO> findById(@PathVariable long id) {
         CourseDTO courseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
@@ -53,13 +58,38 @@ public class CourseController {
         return new ResponseEntity<>(savedCourseDTO, HttpStatus.CREATED);
     }
 
+//    @Transactional
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CourseDTO request) {
+//        CourseDTO updatedCourseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
+//        log.info(updatedCourseDTO.toString());
+//        if (updatedCourseDTO.getId() == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        request.setId(id);
+//        Course course = courseMapper.toEntity(request);
+//        courseService.replace(course);
+//        log.info(course);
+//        return ResponseEntity.noContent().build();
+//    }
+
+    @PreAuthorize("hasRole('TEACHER')")
     @Transactional
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CourseDTO request) {
+        System.out.println(request);
         CourseDTO updatedCourseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
         log.info(updatedCourseDTO.toString());
         if (updatedCourseDTO.getId() == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String teacherEmail = authentication.getName();
+
+        if (!updatedCourseDTO.getTeacherDTO().getUserDTO().getEmail().equals(teacherEmail)) {
+            throw new BadRequestException("You do not have permission to modify this course");
         }
 
         request.setId(id);
