@@ -17,11 +17,14 @@ public class ReviewDTO implements Serializable {
     private String comment;
 
     @JsonProperty("student")
+    @JsonIdentityReference(alwaysAsId = true)
     private StudentDTO student;
 
     @JsonProperty("course")
+    @JsonIdentityReference(alwaysAsId = true)
     private CourseDTO course;
 
     @JsonProperty("teacher")
+    @JsonIdentityReference(alwaysAsId = true)
     private TeacherDTO teacher;
 }

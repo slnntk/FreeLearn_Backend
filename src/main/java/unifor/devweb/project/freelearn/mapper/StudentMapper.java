@@ -13,7 +13,7 @@ import unifor.devweb.project.freelearn.dto.StudentDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, StudentCourseMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, StudentCourseMapper.class, ReviewMapper.class})
 public interface StudentMapper {
 
     @Mapping(source = "user", target = "userDTO")

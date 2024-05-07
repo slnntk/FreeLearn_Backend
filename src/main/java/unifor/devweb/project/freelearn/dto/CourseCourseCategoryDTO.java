@@ -13,9 +13,7 @@ public class CourseCourseCategoryDTO implements Serializable {
     private Long id;
 
     @JsonProperty("courseId")
-    @JsonIdentityReference(alwaysAsId = true)
     private Long courseId;
-    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("categoryId")
     private Long categoryId;
 }

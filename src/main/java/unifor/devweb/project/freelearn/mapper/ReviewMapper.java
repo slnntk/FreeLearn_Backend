@@ -10,7 +10,7 @@ import unifor.devweb.project.freelearn.domain.entities.Student;
 import unifor.devweb.project.freelearn.domain.entities.Teacher;
 import unifor.devweb.project.freelearn.dto.ReviewDTO;
 
-@Mapper(componentModel = "spring", uses = {StudentMapper.class, CourseMapper.class, TeacherMapper.class})
+@Mapper(componentModel = "spring", uses = {StudentCourseMapper.class, CourseMapper.class, TeacherMapper.class})
 public interface ReviewMapper {
 
     @Mapping(source = "student", target = "student")

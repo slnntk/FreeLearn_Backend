@@ -23,6 +23,7 @@ public class StudentDTO implements Serializable {
     private UserDTO userDTO;
 
     @JsonProperty("courses")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<StudentCourseDTO> studentCourseDTOList;
 
     @JsonProperty("reviews")
