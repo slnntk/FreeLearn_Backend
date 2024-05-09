@@ -1,0 +1,13 @@
+services:
+  db:
+    image: mysql
+    container_name: freelearn_mysql_prod
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: freelearn
+    ports:
+      - "3306:3306"
+    volumes:
+      - data:/var/lib/mysql
+volumes:
+  data:

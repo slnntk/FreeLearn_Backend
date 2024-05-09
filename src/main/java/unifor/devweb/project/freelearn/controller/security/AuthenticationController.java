@@ -2,6 +2,7 @@ package unifor.devweb.project.freelearn.controller.security;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import unifor.devweb.project.freelearn.infra.security.TokenService;
 import unifor.devweb.project.freelearn.repository.UserRepository;
 
 @RestController
+@Log4j2
 @RequestMapping("auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -28,11 +30,14 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-
+        String token = null;
+        try{
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+            var auth = this.authenticationManager.authenticate(usernamePassword);
+            token = tokenService.generateToken((User)auth.getPrincipal());
+        } catch (Exception e){
+            log.error("error");
+        }
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 

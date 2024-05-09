@@ -22,23 +22,37 @@ public class SecurityConfigurations {
 
     private final SecurityFilter securityFilter;
 
+    //    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return  httpSecurity
+//                .csrf(csrf -> csrf.disable())
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/courses").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/course-modules").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/lessons").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/course-categories").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/reviews").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/students").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/teachers").hasRole("ADMIN")
+//                        .anyRequest().authenticated()
+//                )
+//                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+//                .build();
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return  httpSecurity
+        return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/courses").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/course-modules").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/lessons").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/course-categories").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/reviews").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/students").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/teachers").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/courses").permitAll()
+                        .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -51,7 +65,7 @@ public class SecurityConfigurations {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
