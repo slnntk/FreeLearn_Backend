@@ -29,10 +29,10 @@ public class TokenService {
                     .withSubject(user.getEmail())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
-            System.out.println(token);
+            log.info(token);
             return token;
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Error while generating token", exception);
+            throw new BadRequestException("Error while generating token");
         }
     }
 

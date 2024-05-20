@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unifor.devweb.project.freelearn.config.CycleAvoidingMappingContext;
 import unifor.devweb.project.freelearn.domain.entities.Student;
 import unifor.devweb.project.freelearn.dto.StudentDTO;
 import unifor.devweb.project.freelearn.mapper.StudentMapper;
@@ -23,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final CycleAvoidingMappingContext context;
     private final StudentService studentService;
     private final StudentMapper studentMapper;
 

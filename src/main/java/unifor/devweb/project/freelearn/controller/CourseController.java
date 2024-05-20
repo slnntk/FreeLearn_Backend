@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.dto.CourseDTO;
+import unifor.devweb.project.freelearn.exception.AccessDeniedException;
 import unifor.devweb.project.freelearn.exception.BadRequestException;
 import unifor.devweb.project.freelearn.mapper.CourseMapper;
 import unifor.devweb.project.freelearn.services.CourseService;
@@ -78,7 +79,6 @@ public class CourseController {
     @Transactional
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CourseDTO request) {
-        System.out.println(request);
         CourseDTO updatedCourseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
         log.info(updatedCourseDTO.toString());
         if (updatedCourseDTO.getId() == null) {
@@ -89,7 +89,7 @@ public class CourseController {
         String teacherEmail = authentication.getName();
 
         if (!updatedCourseDTO.getTeacherDTO().getUserDTO().getEmail().equals(teacherEmail)) {
-            throw new BadRequestException("You do not have permission to modify this course");
+            throw new AccessDeniedException("You do not have permission to modify this course");
         }
 
         request.setId(id);

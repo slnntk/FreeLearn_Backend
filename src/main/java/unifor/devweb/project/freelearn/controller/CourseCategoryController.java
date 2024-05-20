@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unifor.devweb.project.freelearn.config.CycleAvoidingMappingContext;
 import unifor.devweb.project.freelearn.domain.entities.CourseCategory;
 import unifor.devweb.project.freelearn.dto.CourseCategoryDTO;
 import unifor.devweb.project.freelearn.mapper.CourseCategoryMapper;
@@ -23,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseCategoryController {
 
-    private final CycleAvoidingMappingContext context;
     private final CourseCategoryService courseCategoryService;
     private final CourseCategoryMapper courseCategoryMapper;
 

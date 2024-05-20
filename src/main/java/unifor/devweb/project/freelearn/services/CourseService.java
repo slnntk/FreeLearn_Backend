@@ -4,15 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import unifor.devweb.project.freelearn.domain.entities.*;
+import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.exception.ObjectNotFoundException;
 import unifor.devweb.project.freelearn.repository.CourseCourseCategoryRepository;
 import unifor.devweb.project.freelearn.repository.CourseRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -1,7 +1,6 @@
 package unifor.devweb.project.freelearn.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import unifor.devweb.project.freelearn.domain.entities.user.UserRole;

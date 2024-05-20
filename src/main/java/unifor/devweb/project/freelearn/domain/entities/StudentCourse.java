@@ -3,8 +3,6 @@ package unifor.devweb.project.freelearn.domain.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 @Entity
 @Table(name = "student_course")
 @Data

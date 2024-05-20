@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unifor.devweb.project.freelearn.config.CycleAvoidingMappingContext;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
 import unifor.devweb.project.freelearn.dto.CourseModuleDTO;
 import unifor.devweb.project.freelearn.exception.BadRequestException;
@@ -23,8 +22,6 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 public class CourseModuleController {
-
-    private final CycleAvoidingMappingContext context;
 
     private final CourseModuleService courseModuleService;
     private final CourseModuleMapper courseModuleMapper;

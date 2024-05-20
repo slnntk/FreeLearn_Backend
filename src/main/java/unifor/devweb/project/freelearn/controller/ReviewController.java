@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unifor.devweb.project.freelearn.config.CycleAvoidingMappingContext;
 import unifor.devweb.project.freelearn.domain.entities.Review;
 import unifor.devweb.project.freelearn.dto.ReviewDTO;
 import unifor.devweb.project.freelearn.mapper.ReviewMapper;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewController {
 
-    private final CycleAvoidingMappingContext context;
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
 
