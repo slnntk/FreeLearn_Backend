@@ -9,15 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.dto.CourseDTO;
-import unifor.devweb.project.freelearn.exception.AccessDeniedException;
-import unifor.devweb.project.freelearn.exception.BadRequestException;
+import unifor.devweb.project.freelearn.infra.security.util.SecurityUtils;
 import unifor.devweb.project.freelearn.mapper.CourseMapper;
 import unifor.devweb.project.freelearn.services.CourseService;
+import unifor.devweb.project.freelearn.util.OnlyAuthorizedTeacher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +28,7 @@ public class CourseController {
 
     private final CourseService courseService;
     private final CourseMapper courseMapper;
+    private final SecurityUtils securityUtils;
 
     @GetMapping
     public ResponseEntity<Page<CourseDTO>> list(Pageable pageable) {
@@ -53,6 +52,7 @@ public class CourseController {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping
     public ResponseEntity<CourseDTO> save(@Valid @RequestBody CourseDTO request) {
         CourseDTO savedCourseDTO = courseMapper.toDTO(courseService.save(courseMapper.toEntity(request)));
@@ -75,30 +75,26 @@ public class CourseController {
 //        return ResponseEntity.noContent().build();
 //    }
 
-    @PreAuthorize("hasRole('TEACHER')")
     @Transactional
+    @PreAuthorize("hasRole('TEACHER')")
+    @OnlyAuthorizedTeacher(teacherId = "id")
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CourseDTO request) {
         CourseDTO updatedCourseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
-        log.info(updatedCourseDTO.toString());
+
         if (updatedCourseDTO.getId() == null) {
             return ResponseEntity.notFound().build();
-        }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String teacherEmail = authentication.getName();
-
-        if (!updatedCourseDTO.getTeacherDTO().getUserDTO().getEmail().equals(teacherEmail)) {
-            throw new AccessDeniedException("You do not have permission to modify this course");
         }
 
         request.setId(id);
         Course course = courseMapper.toEntity(request);
         courseService.replace(course);
-        log.info(course);
         return ResponseEntity.noContent().build();
     }
 
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @OnlyAuthorizedTeacher(teacherId = "id")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         courseService.delete(id);
