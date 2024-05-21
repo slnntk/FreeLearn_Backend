@@ -8,15 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.Course;
-import unifor.devweb.project.freelearn.domain.entities.CourseModule;
-import unifor.devweb.project.freelearn.domain.requests.course.CourseGetRequest;
-import unifor.devweb.project.freelearn.domain.requests.course.CoursePostRequest;
-import unifor.devweb.project.freelearn.domain.requests.course.CoursePutRequest;
-import unifor.devweb.project.freelearn.mapper.CourseMapperImpl;
+import unifor.devweb.project.freelearn.dto.CourseDTO;
+import unifor.devweb.project.freelearn.infra.security.util.SecurityUtils;
+import unifor.devweb.project.freelearn.mapper.CourseMapper;
 import unifor.devweb.project.freelearn.services.CourseService;
+import unifor.devweb.project.freelearn.util.OnlyAuthorizedTeacher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,75 +27,77 @@ import java.util.List;
 public class CourseController {
 
     private final CourseService courseService;
-    private final CourseMapperImpl courseMapper;
+    private final CourseMapper courseMapper;
+    private final SecurityUtils securityUtils;
 
     @GetMapping
-    public ResponseEntity<Page<Course>> list(Pageable pageable) {
-        return ResponseEntity.ok(courseService.listAll(pageable));
-    }
-
-    @GetMapping("/client")
-    public ResponseEntity<Page<CourseGetRequest>> listToClient(Pageable pageable) {
-        Page<Course> coursePage = courseService.listAll(pageable);
-        Page<CourseGetRequest> courseGetRequestPage = coursePage.map(courseMapper::fromCourseToGetRequest);
-        return ResponseEntity.ok(courseGetRequestPage);
+    public ResponseEntity<Page<CourseDTO>> list(Pageable pageable) {
+        Page<CourseDTO> courseDTOPage = courseService.listAll(pageable)
+                .map(courseMapper::toDTO);
+        return ResponseEntity.ok(courseDTOPage);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<Iterable <Course>> listAll() {
-        return ResponseEntity.ok(courseService.listAllNonPageable());
+    public ResponseEntity<List<CourseDTO>> listAll() {
+        List<CourseDTO> courseDTOList = new ArrayList<>();
+        courseService.listAllNonPageable().forEach(course -> courseDTOList.add(courseMapper.toDTO(course)));
+        return ResponseEntity.ok(courseDTOList);
     }
 
-    @GetMapping(path = "/client/all")
-    public ResponseEntity<Iterable <CourseGetRequest>> listAllNonPageableToClient() {
-        List<Course> courseList = (List<Course>) courseService.listAllNonPageable();
-        List<CourseGetRequest> courseGetRequestList = courseList
-                .stream()
-                .map(courseMapper::fromCourseToGetRequest)
-                .toList();
-        return ResponseEntity.ok(courseGetRequestList);
-    }
-
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Course> findById(@PathVariable long id) {
-        return ResponseEntity.ok(courseService.findByIdOrThrowBadRequestException(id));
-    }
-
-    @GetMapping(path = "/client/{id}")
-    public ResponseEntity<CourseGetRequest> findByIdToClient(@PathVariable long id) {
-        Course course = courseService.findByIdOrThrowBadRequestException(id);
-        CourseGetRequest courseGetRequest = courseMapper.fromCourseToGetRequest(course);
-        return ResponseEntity.ok(courseGetRequest);
+    public ResponseEntity<CourseDTO> findById(@PathVariable long id) {
+        CourseDTO courseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
+        return ResponseEntity.ok(courseDTO);
     }
 
     @Transactional
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping
-    public ResponseEntity<Course> save(@Valid @RequestBody CoursePostRequest request) {
-        Course course = courseMapper.toCourse(request);
-        Course savedCourse = courseService.save(course);
-        return new ResponseEntity<>(savedCourse, HttpStatus.CREATED);
+    public ResponseEntity<CourseDTO> save(@Valid @RequestBody CourseDTO request) {
+        CourseDTO savedCourseDTO = courseMapper.toDTO(courseService.save(courseMapper.toEntity(request)));
+        return new ResponseEntity<>(savedCourseDTO, HttpStatus.CREATED);
     }
 
+//    @Transactional
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CourseDTO request) {
+//        CourseDTO updatedCourseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
+//        log.info(updatedCourseDTO.toString());
+//        if (updatedCourseDTO.getId() == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        request.setId(id);
+//        Course course = courseMapper.toEntity(request);
+//        courseService.replace(course);
+//        log.info(course);
+//        return ResponseEntity.noContent().build();
+//    }
+
     @Transactional
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CoursePutRequest request) {
-        Course existingCourse = courseService.findByIdOrThrowBadRequestException(id);
-        Course updatedCourse = courseMapper.toCourse(existingCourse, request);
+    @PreAuthorize("hasRole('TEACHER')")
+    @OnlyAuthorizedTeacher(teacherId = "id")
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody @Valid CourseDTO request) {
+        CourseDTO updatedCourseDTO = courseMapper.toDTO(courseService.findByIdOrThrowBadRequestException(id));
 
-        existingCourse.getModules().clear();
+        if (updatedCourseDTO.getId() == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        List<CourseModule> newModules = courseMapper.mapCourseModulesReturnsList(updatedCourse, request.getModuleIds());
-        existingCourse.getModules().addAll(newModules);
-
-        courseService.replace(existingCourse);
+        request.setId(id);
+        Course course = courseMapper.toEntity(request);
+        courseService.replace(course);
         return ResponseEntity.noContent().build();
     }
 
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @OnlyAuthorizedTeacher(teacherId = "id")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         courseService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }

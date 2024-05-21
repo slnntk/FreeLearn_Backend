@@ -1,5 +1,6 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,14 +21,17 @@ public class CourseCategory {
     private String name;
     private String description;
 
-    @ManyToMany(mappedBy = "courseCategories")
-    private List<Course> courses;
+    @Nullable
+    @OneToMany(mappedBy = "category")
+    private List<CourseCourseCategory> courses;
+
     @Override
     public String toString() {
         return "CourseCategory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", courses='" + courses + '\'' +
                 '}';
     }
 

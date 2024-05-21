@@ -2,6 +2,7 @@ package unifor.devweb.project.freelearn.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import unifor.devweb.project.freelearn.domain.entities.user.User;
 
 import java.util.List;
 

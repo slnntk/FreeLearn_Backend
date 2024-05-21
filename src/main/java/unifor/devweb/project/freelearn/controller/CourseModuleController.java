@@ -10,15 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.CourseModule;
-import unifor.devweb.project.freelearn.domain.requests.coursemodule.CourseModuleGetRequest;
-import unifor.devweb.project.freelearn.domain.requests.coursemodule.CourseModulePostRequest;
-import unifor.devweb.project.freelearn.domain.requests.coursemodule.CourseModulePutRequest;
+import unifor.devweb.project.freelearn.dto.CourseModuleDTO;
 import unifor.devweb.project.freelearn.exception.BadRequestException;
-import unifor.devweb.project.freelearn.mapper.CourseModuleMapperImpl;
+import unifor.devweb.project.freelearn.mapper.CourseModuleMapper;
 import unifor.devweb.project.freelearn.services.CourseModuleService;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("course-modules")
@@ -27,65 +24,48 @@ import java.util.Objects;
 public class CourseModuleController {
 
     private final CourseModuleService courseModuleService;
-    private final CourseModuleMapperImpl courseModuleMapper;
+    private final CourseModuleMapper courseModuleMapper;
 
     @GetMapping
-    public ResponseEntity<Page<CourseModule>> list(@RequestParam("courseId") Long courseId, Pageable pageable) {
-        return ResponseEntity.ok(courseModuleService.listAll(courseId, pageable));
-    }
-
-    @GetMapping("/client")
-    public ResponseEntity<Page<CourseModuleGetRequest>> listToClient(@RequestParam("courseId") Long courseId, Pageable pageable) {
+    public ResponseEntity<Page<CourseModuleDTO>> list(@RequestParam("courseId") Long courseId, Pageable pageable) {
         Page<CourseModule> coursePage = courseModuleService.listAll(courseId, pageable);
-        Page<CourseModuleGetRequest> courseGetRequestPage = coursePage.map(courseModuleMapper::fromCourseModuleToGetRequest);
-        return ResponseEntity.ok(courseGetRequestPage);
+        Page<CourseModuleDTO> courseDTOPage = coursePage.map(courseModuleMapper::toDTO);
+        return ResponseEntity.ok(courseDTOPage);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<Iterable<CourseModule>> listAll(@RequestParam("courseId") Long courseId) {
-        return ResponseEntity.ok(courseModuleService.listAllNonPageable(courseId));
-    }
-
-    @GetMapping(path = "/client/all")
-    public ResponseEntity<Iterable <CourseModuleGetRequest>> listAllNonPageableToClient(@RequestParam("courseId") Long courseId) {
+    public ResponseEntity<List<CourseModuleDTO>> listAll(@RequestParam("courseId") Long courseId) {
         List<CourseModule> courseModuleList = (List<CourseModule>) courseModuleService.listAllNonPageable(courseId);
-        List<CourseModuleGetRequest> courseModuleGetRequestList = courseModuleList
-                .stream()
-                .map(courseModuleMapper::fromCourseModuleToGetRequest)
+        List<CourseModuleDTO> courseModuleDTOList = courseModuleList.stream()
+                .map(courseModuleMapper::toDTO)
                 .toList();
-        return ResponseEntity.ok(courseModuleGetRequestList);
+        return ResponseEntity.ok(courseModuleDTOList);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<CourseModule> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(courseModuleService.findByIdOrThrowBadRequestException(id));
-    }
-
-    @GetMapping(path = "/client/{id}")
-    public ResponseEntity<CourseModuleGetRequest> findByIdToClient(@PathVariable long id) {
-        CourseModule course = courseModuleService.findByIdOrThrowBadRequestException(id);
-        CourseModuleGetRequest courseModuleGetRequest = courseModuleMapper.fromCourseModuleToGetRequest(course);
-        return ResponseEntity.ok(courseModuleGetRequest);
+    public ResponseEntity<CourseModuleDTO> findById(@PathVariable Long id) {
+        CourseModule courseModule = courseModuleService.findByIdOrThrowBadRequestException(id);
+        CourseModuleDTO courseModuleDTO = courseModuleMapper.toDTO(courseModule);
+        return ResponseEntity.ok(courseModuleDTO);
     }
 
     @Transactional
     @PostMapping
-    public ResponseEntity<CourseModule> save(@Valid @RequestParam("courseId") Long courseId, @RequestBody CourseModulePostRequest module) {
-        if (!Objects.equals(module.getCourseId(), courseId)){
-            throw new BadRequestException("The courseId must be the same in the request parameter and in the request body!");
-        }
-        module.setCourseId(courseId);
-        CourseModule courseModule = courseModuleMapper.toCourseModule(module);
+    public ResponseEntity<CourseModuleDTO> save(@Valid @RequestParam("courseId") Long courseId, @RequestBody CourseModuleDTO moduleDTO) {
+        CourseModule courseModule = courseModuleMapper.toEntity(moduleDTO);
         CourseModule savedCourseModule = courseModuleService.save(courseModule.getCourse().getId(), courseModule);
-        return new ResponseEntity<>(savedCourseModule, HttpStatus.CREATED);
+        CourseModuleDTO savedCourseModuleDTO = courseModuleMapper.toDTO(savedCourseModule);
+        return new ResponseEntity<>(savedCourseModuleDTO, HttpStatus.CREATED);
     }
 
     @Transactional
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<Void> replace(@PathVariable Long id, @RequestBody CourseModulePutRequest module) {
+    @PutMapping(value = "/{id}", consumes = "application/json")
+    public ResponseEntity<Void> replace(@PathVariable Long id, @RequestBody @Valid CourseModuleDTO moduleDTO) {
         CourseModule existingCourseModule = courseModuleService.findByIdOrThrowBadRequestException(id);
-        module.setCourseId(id);
-        CourseModule updatedCourseModule = courseModuleMapper.toCourseModule(existingCourseModule, module);
+        if (!existingCourseModule.getId().equals(moduleDTO.getId())) {
+            throw new BadRequestException("The module ID in the request body must match the ID in the URL!");
+        }
+        CourseModule updatedCourseModule = courseModuleMapper.toEntity(moduleDTO);
         courseModuleService.replace(updatedCourseModule);
         return ResponseEntity.noContent().build();
     }

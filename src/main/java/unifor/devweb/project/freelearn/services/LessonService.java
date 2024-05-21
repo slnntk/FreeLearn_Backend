@@ -19,7 +19,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
 
     public Page<Lesson> listAll(Long courseId, Pageable pageable) {
-        return lessonRepository.findByModuleId(courseId, pageable);
+        return lessonRepository.findByModuleIdPageable(courseId, pageable);
     }
 
     public Iterable<Lesson> listAllNonPageable(Long courseId) {
@@ -28,7 +28,7 @@ public class LessonService {
 
     public Lesson findByIdOrThrowBadRequestException(Long lessonId) {
         return lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new ObjectNotFoundException("Lesson not found"));
+                .orElseThrow(() -> new ObjectNotFoundException("LessonDTO not found"));
     }
 
     @Transactional

@@ -10,15 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unifor.devweb.project.freelearn.domain.entities.Lesson;
-import unifor.devweb.project.freelearn.domain.requests.lesson.LessonGetRequest;
-import unifor.devweb.project.freelearn.domain.requests.lesson.LessonPostRequest;
-import unifor.devweb.project.freelearn.domain.requests.lesson.LessonPutRequest;
+import unifor.devweb.project.freelearn.dto.LessonDTO;
 import unifor.devweb.project.freelearn.exception.BadRequestException;
-import unifor.devweb.project.freelearn.mapper.LessonMapperImpl;
+import unifor.devweb.project.freelearn.mapper.LessonMapper;
 import unifor.devweb.project.freelearn.services.LessonService;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("lessons")
@@ -26,67 +23,49 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class LessonController {
 
-
     private final LessonService lessonService;
-    private final LessonMapperImpl lessonMapper;
+    private final LessonMapper lessonMapper;
 
     @GetMapping
-    public ResponseEntity<Page<Lesson>> list(@RequestParam("courseModuleId") Long courseModuleId, Pageable pageable) {
-        return ResponseEntity.ok(lessonService.listAll(courseModuleId, pageable));
-    }
-
-    @GetMapping("/client")
-    public ResponseEntity<Page<LessonGetRequest>> listToClient(@RequestParam("courseModuleId") Long courseModuleId, Pageable pageable) {
-        Page<Lesson> couseModulePage = lessonService.listAll(courseModuleId, pageable);
-        Page<LessonGetRequest> couseModuleGetRequestPage = couseModulePage.map(lessonMapper::fromLessonToGetRequest);
-        return ResponseEntity.ok(couseModuleGetRequestPage);
+    public ResponseEntity<Page<LessonDTO>> list(@RequestParam("courseModuleId") Long courseModuleId, Pageable pageable) {
+        Page<Lesson> lessonPage = lessonService.listAll(courseModuleId, pageable);
+        Page<LessonDTO> lessonDTOPage = lessonPage.map(lessonMapper::toDTO);
+        return ResponseEntity.ok(lessonDTOPage);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<Iterable<Lesson>> listAll(@RequestParam("courseModuleId") Long courseModuleId) {
-        return ResponseEntity.ok(lessonService.listAllNonPageable(courseModuleId));
-    }
-
-    @GetMapping(path = "/client/all")
-    public ResponseEntity<Iterable <LessonGetRequest>> listAllNonPageableToClient(@RequestParam("courseModuleId") Long courseModuleId) {
+    public ResponseEntity<List<LessonDTO>> listAll(@RequestParam("courseModuleId") Long courseModuleId) {
         List<Lesson> lessonList = (List<Lesson>) lessonService.listAllNonPageable(courseModuleId);
-        List<LessonGetRequest> lessonGetRequestList = lessonList
-                .stream()
-                .map(lessonMapper::fromLessonToGetRequest)
+        List<LessonDTO> lessonDTOList = lessonList.stream()
+                .map(lessonMapper::toDTO)
                 .toList();
-        return ResponseEntity.ok(lessonGetRequestList);
+        return ResponseEntity.ok(lessonDTOList);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Lesson> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(lessonService.findByIdOrThrowBadRequestException(id));
-    }
-
-    @GetMapping(path = "/client/{id}")
-    public ResponseEntity<LessonGetRequest> findByIdToClient(@PathVariable long id) {
+    public ResponseEntity<LessonDTO> findById(@PathVariable Long id) {
         Lesson lesson = lessonService.findByIdOrThrowBadRequestException(id);
-        LessonGetRequest lessonGetRequest = lessonMapper.fromLessonToGetRequest(lesson);
-        return ResponseEntity.ok(lessonGetRequest);
+        LessonDTO lessonDTO = lessonMapper.toDTO(lesson);
+        return ResponseEntity.ok(lessonDTO);
     }
 
     @Transactional
     @PostMapping
-    public ResponseEntity<Lesson> save(@Valid @RequestParam("courseModuleId") Long courseModuleId, @RequestBody LessonPostRequest lesson) {
-        if (!Objects.equals(lesson.getModuleId(), courseModuleId)){
-            throw new BadRequestException("The courseModuleId must be the same in the request parameter and in the request body!");
-        }
-        lesson.setModuleId(courseModuleId);
-        Lesson mappedLesson = lessonMapper.toLesson(lesson);
-        Lesson savedLesson = lessonService.save(mappedLesson.getModule().getId(), mappedLesson);
-        return new ResponseEntity<>(savedLesson, HttpStatus.CREATED);
+    public ResponseEntity<LessonDTO> save(@Valid @RequestParam("courseModuleId") Long courseModuleId, @RequestBody LessonDTO lessonDTO) {
+        Lesson lesson = lessonMapper.toEntity(lessonDTO);
+        Lesson savedLesson = lessonService.save(lesson.getModule().getId(), lesson);
+        LessonDTO savedLessonDTO = lessonMapper.toDTO(savedLesson);
+        return new ResponseEntity<>(savedLessonDTO, HttpStatus.CREATED);
     }
 
     @Transactional
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<Void> replace(@PathVariable Long id, @RequestBody LessonPutRequest lesson) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> replace(@PathVariable Long id, @RequestBody @Valid LessonDTO lessonDTO) {
         Lesson existingLesson = lessonService.findByIdOrThrowBadRequestException(id);
-        lesson.setModuleId(id);
-        Lesson updatedLesson = lessonMapper.toLesson(existingLesson, lesson);
+        if (!existingLesson.getId().equals(lessonDTO.getId())) {
+            throw new BadRequestException("The lesson ID in the request body must match the ID in the URL!");
+        }
+        Lesson updatedLesson = lessonMapper.toEntity(lessonDTO);
         lessonService.replace(updatedLesson);
         return ResponseEntity.noContent().build();
     }
@@ -97,4 +76,3 @@ public class LessonController {
         return ResponseEntity.noContent().build();
     }
 }
-

@@ -1,19 +1,17 @@
 package unifor.devweb.project.freelearn.domain.entities;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import unifor.devweb.project.freelearn.serialization.CustomCourseSerialization;
+import org.springframework.lang.Nullable;
 
-import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonSerialize(using = CustomCourseSerialization.class)
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +24,18 @@ public class Course {
     private int durationHours;
     private String link;
 
-    @ManyToMany
-    @JoinTable(name = "course_course_category",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<CourseCategory> courseCategories;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseCourseCategory> courseCategories;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @Nullable
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentCourse> enrolledStudents;
-    
+
     @ManyToOne
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @Nullable
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseModule> modules;
 
     @Override

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import unifor.devweb.project.freelearn.exception.BadRequestException;
-import unifor.devweb.project.freelearn.exception.ObjectNotFoundException;
+import unifor.devweb.project.freelearn.exception.*;
+import unifor.devweb.project.freelearn.exception.NullPointerException;
 import unifor.devweb.project.freelearn.exception.details.BadRequestExceptionDetails;
 import unifor.devweb.project.freelearn.exception.details.ExceptionDetails;
 import unifor.devweb.project.freelearn.exception.details.ObjectNotFoundExceptionDetails;
@@ -37,7 +37,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .developerMessage(bre.getClass().getName())
                         .build(), HttpStatus.BAD_REQUEST);
     }
-
 
 
     @ExceptionHandler(ObjectNotFoundException.class)
@@ -84,4 +83,76 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionDetails, headers, status);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionDetails> handleAccessDeniedException(AccessDeniedException ex) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .title("Access Denied")
+                        .details(ex.getMessage())
+                        .developerMessage(ex.getClass().getName())
+                        .build(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({HttpClientErrorException.class, HttpServerErrorException.class})
+    public ResponseEntity<ExceptionDetails> handleHttpClientErrorException(Exception ex) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .title("Error occurred while making HTTP request")
+                        .details(ex.getMessage())
+                        .developerMessage(ex.getClass().getName())
+                        .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionDetails> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.CONFLICT.value())
+                        .title("Database error")
+                        .details(ex.getMessage())
+                        .developerMessage(ex.getClass().getName())
+                        .build(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ExceptionDetails> handleEntityExistsException(EntityExistsException ex) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.CONFLICT.value())
+                        .title("Entity already exists")
+                        .details(ex.getMessage())
+                        .developerMessage(ex.getClass().getName())
+                        .build(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ExceptionDetails> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .title("Method argument type mismatch")
+                        .details(ex.getMessage())
+                        .developerMessage(ex.getClass().getName())
+                        .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ExceptionDetails> handleNullPointerException(NullPointerException ex) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .title("Null pointer exception")
+                        .details(ex.getMessage())
+                        .developerMessage(ex.getClass().getName())
+                        .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
+
