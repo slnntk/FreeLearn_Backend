@@ -16,6 +16,8 @@ public class ReviewDTO implements Serializable {
     @NotBlank(message = "Comment cannot be blank")
     private String comment;
 
+    private Double rating;
+
     @JsonProperty("student")
     @JsonIdentityReference(alwaysAsId = true)
     private StudentDTO student;

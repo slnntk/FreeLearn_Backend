@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import unifor.devweb.project.freelearn.domain.entities.Teacher;
 import unifor.devweb.project.freelearn.dto.TeacherDTO;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, CourseMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface TeacherMapper {
     @Mapping(source = "user", target = "userDTO")
     @Mapping(source = "courses", target = "courseDTOList")

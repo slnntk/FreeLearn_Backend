@@ -20,10 +20,10 @@ public class StudentDTO implements Serializable {
     private int numberOfCoursesSubscribed;
 
     @JsonProperty("user")
+    @JsonIdentityReference(alwaysAsId = true)
     private UserDTO userDTO;
 
     @JsonProperty("courses")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<StudentCourseDTO> studentCourseDTOList;
 
     @JsonProperty("reviews")

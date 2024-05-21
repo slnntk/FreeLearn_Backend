@@ -1,6 +1,7 @@
 package unifor.devweb.project.freelearn.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
@@ -42,6 +43,7 @@ public class CourseDTO implements Serializable {
     private List<StudentCourseDTO> studentCourseDTOS;
 
     @JsonProperty("teacher")
+    @JsonIdentityReference(alwaysAsId = true)
     private TeacherDTO teacherDTO;
 
     @JsonProperty("modules")

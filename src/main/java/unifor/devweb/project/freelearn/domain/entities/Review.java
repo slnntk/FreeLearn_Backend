@@ -17,6 +17,8 @@ public class Review {
 
     private String comment;
 
+    private Double rating;
+
     @ManyToOne
     private Student student;
 
