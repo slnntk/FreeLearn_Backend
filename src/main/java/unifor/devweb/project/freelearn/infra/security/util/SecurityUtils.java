@@ -26,6 +26,7 @@ public class SecurityUtils {
     }
 
     public boolean isAdmin() {
+        isAuthenticated();
         return authentication != null && authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 

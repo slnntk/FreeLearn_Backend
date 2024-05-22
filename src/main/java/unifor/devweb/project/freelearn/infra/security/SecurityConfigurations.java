@@ -53,6 +53,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/courses").permitAll()
                         .requestMatchers(HttpMethod.GET, "/courses/*").hasRole("TEACHER")
                         .requestMatchers(HttpMethod.POST, "/courses").hasRole("TEACHER")
+                        .requestMatchers(HttpMethod.PUT, "/courses/*").hasRole("TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/courses/*").hasRole("TEACHER")
                         .anyRequest().hasRole("ADMIN")
                 )

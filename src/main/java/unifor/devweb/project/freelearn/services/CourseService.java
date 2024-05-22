@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import unifor.devweb.project.freelearn.domain.entities.Course;
 import unifor.devweb.project.freelearn.exception.AccessDeniedException;
 import unifor.devweb.project.freelearn.exception.ObjectNotFoundException;
 import unifor.devweb.project.freelearn.infra.security.util.SecurityUtils;
-import unifor.devweb.project.freelearn.repository.CourseCourseCategoryRepository;
 import unifor.devweb.project.freelearn.repository.CourseRepository;
 
 @Service
@@ -20,7 +18,6 @@ import unifor.devweb.project.freelearn.repository.CourseRepository;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private final CourseCourseCategoryRepository courseCourseCategoryRepository;
     private final SecurityUtils securityUtils;
 
     public Page<Course> listAll(Pageable pageable) {
@@ -80,7 +77,7 @@ public class CourseService {
 
         boolean canAuthUser = securityUtils.isAdmin() || course.getTeacher().getUser().getEmail().equals(authenticatedUserEmail);
 
-        if (!canAuthUser){
+        if (!canAuthUser) {
             throw new AccessDeniedException("You do not have permission to modify this course");
         }
 
