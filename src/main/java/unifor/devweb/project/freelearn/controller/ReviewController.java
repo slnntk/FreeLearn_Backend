@@ -3,6 +3,7 @@ package unifor.devweb.project.freelearn.controller;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("reviews")
+@Log4j2
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -49,6 +51,7 @@ public class ReviewController {
     @Transactional
     @PostMapping
     public ResponseEntity<ReviewDTO> save(@Valid @RequestBody ReviewDTO request) {
+        log.info(request);
         Review review = reviewMapper.toEntity(request);
         Review savedReview = reviewService.save(review);
         ReviewDTO savedReviewDTO = reviewMapper.toDTO(savedReview);
