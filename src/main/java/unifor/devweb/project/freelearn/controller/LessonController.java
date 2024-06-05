@@ -53,7 +53,7 @@ public class LessonController {
     @PostMapping
     public ResponseEntity<LessonDTO> save(@Valid @RequestParam("courseModuleId") Long courseModuleId, @RequestBody LessonDTO lessonDTO) {
         Lesson lesson = lessonMapper.toEntity(lessonDTO);
-        Lesson savedLesson = lessonService.save(lesson.getModule().getId(), lesson);
+        Lesson savedLesson = lessonService.save(courseModuleId, lesson);
         LessonDTO savedLessonDTO = lessonMapper.toDTO(savedLesson);
         return new ResponseEntity<>(savedLessonDTO, HttpStatus.CREATED);
     }
