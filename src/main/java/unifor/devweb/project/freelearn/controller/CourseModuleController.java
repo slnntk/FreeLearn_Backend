@@ -53,7 +53,7 @@ public class CourseModuleController {
     @PostMapping
     public ResponseEntity<CourseModuleDTO> save(@Valid @RequestParam("courseId") Long courseId, @RequestBody CourseModuleDTO moduleDTO) {
         CourseModule courseModule = courseModuleMapper.toEntity(moduleDTO);
-        CourseModule savedCourseModule = courseModuleService.save(courseModule.getCourse().getId(), courseModule);
+        CourseModule savedCourseModule = courseModuleService.save(courseId, courseModule);
         CourseModuleDTO savedCourseModuleDTO = courseModuleMapper.toDTO(savedCourseModule);
         return new ResponseEntity<>(savedCourseModuleDTO, HttpStatus.CREATED);
     }
