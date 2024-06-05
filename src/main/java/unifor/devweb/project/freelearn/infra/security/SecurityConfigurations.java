@@ -50,10 +50,6 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/courses").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/courses/*").hasRole("TEACHER")
-                        .requestMatchers(HttpMethod.POST, "/courses").hasRole("TEACHER")
-                        .requestMatchers(HttpMethod.DELETE, "/courses/*").hasRole("TEACHER")
                         .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
